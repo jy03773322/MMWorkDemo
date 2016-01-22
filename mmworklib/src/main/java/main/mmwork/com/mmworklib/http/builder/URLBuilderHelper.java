@@ -1,0 +1,65 @@
+package main.mmwork.com.mmworklib.http.builder;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+/**
+ * Created by zhai on 16/1/18.
+ */
+public class URLBuilderHelper {
+
+    public static String replaceQueryStringParamNames(String url, Map<String, Object> paramsMap) {
+        if (url.contains("$")) {
+            int qIndex = url.indexOf('?');
+            if (qIndex < url.length() - 1) {
+                String query = url.substring(qIndex + 1);
+                String[] kvArray = query.split("&");
+                for (String kv : kvArray) {
+                    String name = kv.split("=")[0];
+                    if (paramsMap.containsKey(name)) {
+                        url = url.replaceFirst("\\$", String.valueOf(paramsMap.get(name)));
+                        paramsMap.remove(name);
+                    }
+                }
+            }
+        }
+        return url;
+    }
+
+    public static String getSignStr(String[] signParams, Map<String, Object> paramsMap) {
+        String result = "";
+
+        if (signParams != null && signParams.length > 0 && paramsMap != null && paramsMap.size() > 0) {
+            for (String key : signParams) {
+                Object item = paramsMap.get(key);
+                if (item != null) {
+                    result += item;
+                }
+            }
+        }
+        return result;
+    }
+
+    public static String getUrlStr(String url, Map<String, String> paramsMap) {
+        StringBuffer urlBuffer = new StringBuffer();
+        urlBuffer.append(url + "?");
+        if (null == paramsMap) {
+            paramsMap = new HashMap<>();
+        }
+        if (paramsMap != null && paramsMap.size() > 0) {
+            Iterator<Map.Entry<String, String>> entryIterator = paramsMap.entrySet().iterator();
+            while (entryIterator.hasNext()) {
+                Map.Entry<String, String> entry = entryIterator.next();
+                String k = entry.getKey();
+                String v = entry.getValue();
+                int index = urlBuffer.lastIndexOf("?");
+                if (index != urlBuffer.length()) {
+                    urlBuffer.append("&");
+                }
+                urlBuffer.append(k + "=" + v);
+            }
+        }
+        return urlBuffer.toString();
+    }
+}
