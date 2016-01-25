@@ -19,12 +19,16 @@ public interface URLBuilder {
 
     public Map<String, String> getParams();
 
+    public boolean getisJson();
+
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Path {
         public String host() default "";
 
         public String url();
+
+        public boolean isJson() default false;
 
         public String[] sign() default "";
 

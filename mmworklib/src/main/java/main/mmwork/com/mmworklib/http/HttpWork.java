@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.squareup.okhttp.Call;
-import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.RequestBody;
 
 import main.mmwork.com.mmworklib.db.dao.CacheEntityDao;
 import main.mmwork.com.mmworklib.db.entity.NCacheEntity;
@@ -111,9 +111,16 @@ public class HttpWork {
             public void call(Subscriber<? super String> subscriber) {
                 String resultJsonStr = "";
                 if (isPost) {
+                    RequestBody body;
                     //post
-                    FormEncodingBuilder encodingBuilder = MapParamsConverter.map2FormEncodingBuilder(builder.getParams());
-                    resultJsonStr = OkHttpWork.post(tag, builder.getUrl(), encodingBuilder);
+                    if (builder.getisJson()) {
+                        //JSON格式请求
+                        body = MapParamsConverter.map2ForJSON(builder.getParams());
+                    } else {
+                        //KV格式请求
+                        body = MapParamsConverter.map2ForBody(builder.getParams());
+                    }
+                    resultJsonStr = OkHttpWork.post(tag, builder.getUrl(), body);
                 } else {
                     //get
                     String urlKey = URLBuilderHelper.getUrlStr(builder.getUrl(), builder.getParams());

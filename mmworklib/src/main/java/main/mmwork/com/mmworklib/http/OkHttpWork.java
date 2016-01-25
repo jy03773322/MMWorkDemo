@@ -2,7 +2,6 @@ package main.mmwork.com.mmworklib.http;
 
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -90,8 +89,7 @@ public class OkHttpWork {
         return null;
     }
 
-    public static String post(Object tag, String url, FormEncodingBuilder builder) {
-        RequestBody formBody = builder.build();
+    public static String post(Object tag, String url, RequestBody formBody ) {
         Request request = new Request.Builder()
                 .url(url)
                 .post(formBody)
