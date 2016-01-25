@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 // 根节点添加
-version = "0.3"
+version = "0.3.1"
 def siteUrl = 'https://github.com/jy03773322/mmworklib'    // project homepage
 def gitUrl = 'https://github.com/jy03773322/mmworklib.git' // project git
 group = "com.mmwork"

@@ -40,6 +40,11 @@ public class DefaultURLBuilder implements URLBuilder {
         return paramsMap;
     }
 
+    @Override
+    public boolean getisJson() {
+        return false;
+    }
+
     /**
      * 填入通用参数
      *
