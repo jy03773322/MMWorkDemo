@@ -100,7 +100,7 @@ public class OkHttpWork {
             addHttpWorkTag(tag, call);
             response = call.execute();
             response.networkResponse();
-            return response.networkResponse().body().string();
+            return response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
         }

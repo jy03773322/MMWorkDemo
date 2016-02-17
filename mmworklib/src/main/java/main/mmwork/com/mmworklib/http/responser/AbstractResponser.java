@@ -2,8 +2,8 @@ package main.mmwork.com.mmworklib.http.responser;
 
 import android.text.TextUtils;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import org.json.JSONObject;
+
 
 /**
  * Created by zhai on 16/1/18.
@@ -13,14 +13,20 @@ public abstract class AbstractResponser {
     private final String RET_CODE = "code";
     private final String RET_MSG = "desc";
     private final int SUCCESS_CODE = 0;
+    private final String DEFAULT_ERROR_MESSAGE = "网络较差，请重试";
 
+    public boolean isCache = false;
     public boolean isSuccess = false;
     public int errorCode = -1;
-    public String errorMessage;
+    public String errorMessage = DEFAULT_ERROR_MESSAGE;
 
     public void parser(final String result) {
         parseHeader(result);
         parserBody(result);
+    }
+
+    public boolean isCache() {
+        return isCache;
     }
 
     public abstract void parserBody(final String result);
@@ -33,7 +39,7 @@ public abstract class AbstractResponser {
             return dataObject;
         }
         try {
-            dataObject = JSON.parseObject(result);
+            dataObject = new JSONObject(result);
             isSuccess = isSuccess(dataObject);
             getErrorDesc(errorCode);
         } catch (Exception e) {
@@ -46,16 +52,12 @@ public abstract class AbstractResponser {
 
     public boolean isSuccess(JSONObject dataObject) {
         if (null != dataObject) {
-            errorCode = 0;
-            isSuccess = true;
-            return true;
+            errorCode = dataObject.optInt(RET_CODE, 0);
+            errorMessage = dataObject.optString(RET_MSG, DEFAULT_ERROR_MESSAGE);
+            if (SUCCESS_CODE == errorCode) {
+                return true;
+            }
         }
-        errorCode = dataObject.getIntValue(RET_CODE);
-        errorMessage = dataObject.getString(RET_MSG);
-        if (SUCCESS_CODE == errorCode) {
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
 }

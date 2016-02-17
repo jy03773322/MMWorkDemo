@@ -11,13 +11,13 @@ import java.util.Map;
 public class DefaultURLBuilder implements URLBuilder {
 
     private String url;
-    private Map<String, String> paramsMap;
+    private Map<String, Object> paramsMap;
 
     @Override
     public void parse(Path path, Map<String, Field> fields,
                       ParamEntity entity) throws IllegalAccessException {
         url = path.host() + path.url();
-        paramsMap = new HashMap<String, String>();
+        paramsMap = new HashMap<String, Object>();
         //增加通用参数
         addCommonParams(paramsMap);
         if (fields != null) {
@@ -36,7 +36,7 @@ public class DefaultURLBuilder implements URLBuilder {
     }
 
     @Override
-    public Map<String, String> getParams() {
+    public Map<String, Object> getParams() {
         return paramsMap;
     }
 
@@ -50,6 +50,6 @@ public class DefaultURLBuilder implements URLBuilder {
      *
      * @param tempParams
      */
-    public void addCommonParams(Map<String, String> tempParams) {
+    public void addCommonParams(Map<String, Object> tempParams) {
     }
 }

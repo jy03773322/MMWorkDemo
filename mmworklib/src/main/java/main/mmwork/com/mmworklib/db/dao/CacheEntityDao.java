@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import main.mmwork.com.mmworklib.db.DatabaseHelper;
-import main.mmwork.com.mmworklib.db.entity.NCacheEntity;
+import main.mmwork.com.mmworklib.db.entity.NetWorkRsultEntity;
 
 
 /**
@@ -19,16 +19,16 @@ public class CacheEntityDao {
 
     public static final String TAG = CacheEntityDao.class.getSimpleName();
 
-    private Dao<NCacheEntity, String> mCacheDao;
+    private Dao<NetWorkRsultEntity, String> mCacheDao;
 
     public CacheEntityDao(Context context) {
         try {
-            mCacheDao = DatabaseHelper.getInstance(context).getDao(NCacheEntity.class);
+            mCacheDao = DatabaseHelper.getInstance(context).getDao(NetWorkRsultEntity.class);
         } catch (SQLException e) {
         }
     }
 
-    public int delete(NCacheEntity user) {
+    public int delete(NetWorkRsultEntity user) {
         int cnt = 0;
         try {
             mCacheDao.delete(user);
@@ -38,7 +38,7 @@ public class CacheEntityDao {
         return cnt;
     }
 
-    public int saveItem(NCacheEntity user) {
+    public int saveItem(NetWorkRsultEntity user) {
         int cnt = 0;
         try {
             Dao.CreateOrUpdateStatus createOrUpdateStatus = mCacheDao.createOrUpdate(user);
@@ -52,7 +52,7 @@ public class CacheEntityDao {
      * @param url
      * @return
      */
-    public NCacheEntity queryForID(String url) {
+    public NetWorkRsultEntity queryForID(String url) {
         try {
             return mCacheDao.queryForId(url);
         } catch (SQLException e) {
@@ -60,7 +60,7 @@ public class CacheEntityDao {
         return null;
     }
 
-    public List<NCacheEntity> queryForAll() {
+    public List<NetWorkRsultEntity> queryForAll() {
         try {
             return mCacheDao.queryForAll();
         } catch (SQLException e) {

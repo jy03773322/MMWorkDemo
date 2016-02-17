@@ -17,7 +17,7 @@ public interface URLBuilder {
 
     public String getUrl();
 
-    public Map<String, String> getParams();
+    public Map<String, Object> getParams();
 
     public boolean getisJson();
 

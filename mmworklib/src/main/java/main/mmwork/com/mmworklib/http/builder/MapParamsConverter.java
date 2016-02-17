@@ -14,12 +14,12 @@ import main.mmwork.com.mmworklib.http.OkHttpWork;
  */
 public class MapParamsConverter {
 
-    public static RequestBody map2ForBody(Map<String, String> map) {
+    public static RequestBody map2ForBody(Map<String, Object> map) {
         FormEncodingBuilder builder = new FormEncodingBuilder();
         if (map == null || map.size() == 0) return builder.build();
-        for (Map.Entry<String, String> entry : map.entrySet()) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
             String key = entry.getKey();
-            String value = entry.getValue();
+            String value = (String) entry.getValue();
             if (key != null && value != null) {
                 builder.add(key, value);
             }
@@ -27,7 +27,7 @@ public class MapParamsConverter {
         return builder.build();
     }
 
-    public static RequestBody map2ForJSON(Map<String, String> map) {
+    public static RequestBody map2ForJSON(Map<String, Object> map) {
         JSONObject jsonObject = new JSONObject(map);
         RequestBody body = RequestBody.create(OkHttpWork.JSON, jsonObject.toString());
         return body;

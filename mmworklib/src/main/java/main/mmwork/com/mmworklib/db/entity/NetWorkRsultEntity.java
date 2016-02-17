@@ -10,13 +10,16 @@ import java.io.Serializable;
  * 缓存实体类
  */
 @DatabaseTable
-public class NCacheEntity implements Serializable {
+public class NetWorkRsultEntity implements Serializable {
 
     @DatabaseField(id = true)
     public String url;
     @DatabaseField
     public String resultJsonStr;
 
-    public NCacheEntity() {
+    public boolean isCache = false;
+
+    public NetWorkRsultEntity() {
     }
+
 }

@@ -41,18 +41,18 @@ public class URLBuilderHelper {
         return result;
     }
 
-    public static String getUrlStr(String url, Map<String, String> paramsMap) {
+    public static String getUrlStr(String url, Map<String, Object> paramsMap) {
         StringBuffer urlBuffer = new StringBuffer();
         urlBuffer.append(url + "?");
         if (null == paramsMap) {
             paramsMap = new HashMap<>();
         }
         if (paramsMap != null && paramsMap.size() > 0) {
-            Iterator<Map.Entry<String, String>> entryIterator = paramsMap.entrySet().iterator();
+            Iterator<Map.Entry<String, Object>> entryIterator = paramsMap.entrySet().iterator();
             while (entryIterator.hasNext()) {
-                Map.Entry<String, String> entry = entryIterator.next();
+                Map.Entry<String, Object> entry = entryIterator.next();
                 String k = entry.getKey();
-                String v = entry.getValue();
+                String v = entry.getValue().toString();
                 int index = urlBuffer.lastIndexOf("?");
                 if (index != urlBuffer.length()) {
                     urlBuffer.append("&");

@@ -7,7 +7,7 @@ import com.squareup.okhttp.Call;
 import com.squareup.okhttp.RequestBody;
 
 import main.mmwork.com.mmworklib.db.dao.CacheEntityDao;
-import main.mmwork.com.mmworklib.db.entity.NCacheEntity;
+import main.mmwork.com.mmworklib.db.entity.NetWorkRsultEntity;
 import main.mmwork.com.mmworklib.http.builder.MapParamsConverter;
 import main.mmwork.com.mmworklib.http.builder.ParamEntity;
 import main.mmwork.com.mmworklib.http.builder.URLBuilder;
@@ -30,19 +30,11 @@ public class HttpWork {
 
     private final String TAG = HttpWork.class.getName();
 
-    private static volatile HttpWork mInstance;
-
     private CacheEntityDao cacheEntityDao;
     private Context context;
 
-    public static HttpWork getInstace(Context context) {
-        if (null == mInstance) {
-            synchronized (HttpWork.class) {
-                if (null == mInstance) {
-                    mInstance = new HttpWork(context);
-                }
-            }
-        }
+    public synchronized static HttpWork getInstace(Context context) {
+        HttpWork mInstance = new HttpWork(context);
         return mInstance;
     }
 
@@ -61,20 +53,21 @@ public class HttpWork {
 
     public <T extends AbstractResponser> Observable<T> req(ParamEntity paramEntity, final Class<T> rspClass, final NetworkCallback<T> callback, boolean isPost, boolean isNeedCache) {
         URLBuilder builder = URLBuilderFactory.build(paramEntity);
-        final Observable<String> source;
+        final Observable<NetWorkRsultEntity> source;
         if (isNeedCache) {
             source = Observable.merge(reqCache(builder), reqNetWork(callback, builder, rspClass, isPost));
         } else {
             source = reqNetWork(callback, builder, rspClass, isPost);
         }
         final Observable<T> observable = source
-                .map(new Func1<String, T>() {
+                .map(new Func1<NetWorkRsultEntity, T>() {
                     @Override
-                    public T call(String s) {
+                    public T call(NetWorkRsultEntity s) {
                         T rsp = null;
                         try {
                             rsp = rspClass.newInstance();
-                            rsp.parser(s);
+                            rsp.parser(s.resultJsonStr);
+                            rsp.isCache = s.isCache;
                         } catch (InstantiationException e) {
                             e.printStackTrace();
                         } catch (IllegalAccessException e) {
@@ -91,7 +84,7 @@ public class HttpWork {
                         if (null != callback) {
                             if (t.isSuccess) {
                                 callback.onSucessed(t);
-                            } else {
+                            } else if (!t.isCache) {
                                 callback.onFilled(t.errorCode, t.errorMessage);
                             }
                         }
@@ -105,10 +98,10 @@ public class HttpWork {
      *
      * @param builder
      */
-    private <T extends AbstractResponser> Observable<String> reqNetWork(final Object tag, final URLBuilder builder, final Class<T> rspClass, final boolean isPost) {
-        Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+    private <T extends AbstractResponser> Observable<NetWorkRsultEntity> reqNetWork(final Object tag, final URLBuilder builder, final Class<T> rspClass, final boolean isPost) {
+        Observable<NetWorkRsultEntity> observable = Observable.create(new Observable.OnSubscribe<NetWorkRsultEntity>() {
             @Override
-            public void call(Subscriber<? super String> subscriber) {
+            public void call(Subscriber<? super NetWorkRsultEntity> subscriber) {
                 String resultJsonStr = "";
                 if (isPost) {
                     RequestBody body;
@@ -126,14 +119,17 @@ public class HttpWork {
                     String urlKey = URLBuilderHelper.getUrlStr(builder.getUrl(), builder.getParams());
                     resultJsonStr = OkHttpWork.get(tag, urlKey);
                 }
-                subscriber.onNext(resultJsonStr);
+                NetWorkRsultEntity cacheEntity = new NetWorkRsultEntity();
+                cacheEntity.resultJsonStr = resultJsonStr;
+                cacheEntity.isCache = false;
+                subscriber.onNext(cacheEntity);
             }
         })
                 .subscribeOn(Schedulers.io())
-                .doOnNext(new Action1<String>() {
+                .doOnNext(new Action1<NetWorkRsultEntity>() {
                     @Override
-                    public void call(String s) {
-                        saveCache(builder, s, rspClass);
+                    public void call(NetWorkRsultEntity entity) {
+                        saveCache(builder, entity.resultJsonStr, rspClass);
                     }
                 });
         return observable;
@@ -145,7 +141,7 @@ public class HttpWork {
                 T rsp = rspClass.newInstance();
                 rsp.parseHeader(s);
                 if (rsp.isSuccess) {
-                    NCacheEntity entity = createCacheEntity(builder, s);
+                    NetWorkRsultEntity entity = createCacheEntity(builder, s);
                     cacheEntityDao.saveItem(entity);
                 }
             } catch (Exception e) {
@@ -158,25 +154,25 @@ public class HttpWork {
      *
      * @param builder
      */
-    private Observable<String> reqCache(final URLBuilder builder) {
-        Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+    private Observable<NetWorkRsultEntity> reqCache(final URLBuilder builder) {
+        Observable<NetWorkRsultEntity> observable = Observable.create(new Observable.OnSubscribe<NetWorkRsultEntity>() {
             @Override
-            public void call(Subscriber<? super String> subscriber) {
-                String resultJsonStr = null;
+            public void call(Subscriber<? super NetWorkRsultEntity> subscriber) {
                 String urlKey = URLBuilderHelper.getUrlStr(builder.getUrl(), builder.getParams());
-                NCacheEntity cacheEntity = cacheEntityDao.queryForID(urlKey);
-                if (null != cacheEntity) {
-                    resultJsonStr = cacheEntity.resultJsonStr;
+                NetWorkRsultEntity cacheEntity = cacheEntityDao.queryForID(urlKey);
+                if (null == cacheEntity) {
+                    cacheEntity = new NetWorkRsultEntity();
                 }
-                subscriber.onNext(resultJsonStr);
+                cacheEntity.isCache = true;
+                subscriber.onNext(cacheEntity);
             }
         })
                 .subscribeOn(Schedulers.io());
         return observable;
     }
 
-    private NCacheEntity createCacheEntity(URLBuilder builder, String result) {
-        NCacheEntity cacheEntity = new NCacheEntity();
+    private NetWorkRsultEntity createCacheEntity(URLBuilder builder, String result) {
+        NetWorkRsultEntity cacheEntity = new NetWorkRsultEntity();
         String urlKey = URLBuilderHelper.getUrlStr(builder.getUrl(), builder.getParams());
         cacheEntity.url = urlKey;
         cacheEntity.resultJsonStr = result;

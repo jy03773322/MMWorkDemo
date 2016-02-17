@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 // 根节点添加
-version = "0.3.1"
+version = "0.3.2.4"
 def siteUrl = 'https://github.com/jy03773322/mmworklib'    // project homepage
 def gitUrl = 'https://github.com/jy03773322/mmworklib.git' // project git
 group = "com.mmwork"
@@ -40,9 +40,9 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.6.0'
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'io.reactivex:rxjava:1.+'
-    compile files('libs/fastjson-1.2.7.jar')
     compile files('libs/ormlite-android-4.48.jar')
     compile files('libs/ormlite-core-4.48.jar')
+    compile 'com.google.code.gson:gson:2.5'
 }
 
 // 根节点添加

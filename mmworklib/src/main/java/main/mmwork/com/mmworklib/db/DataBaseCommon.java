@@ -4,7 +4,7 @@ package main.mmwork.com.mmworklib.db;
 import java.util.HashMap;
 import java.util.Map;
 
-import main.mmwork.com.mmworklib.db.entity.NCacheEntity;
+import main.mmwork.com.mmworklib.db.entity.NetWorkRsultEntity;
 
 
 /**
@@ -24,6 +24,6 @@ public class DataBaseCommon {
 
     static {
         //table TimeLineDataTable version 1
-        mMap.put(NCacheEntity.class, new TableInfo(HTTP_CACHE_TABLE, 1));
+        mMap.put(NetWorkRsultEntity.class, new TableInfo(HTTP_CACHE_TABLE, 1));
     }
 }
