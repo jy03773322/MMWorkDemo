@@ -3,6 +3,7 @@ package main.mmwork.com.mmworklib.http;
 import android.content.Context;
 import android.text.TextUtils;
 
+import main.mmwork.com.mmworklib.db.DatabaseHelper;
 import main.mmwork.com.mmworklib.db.dao.CacheEntityDao;
 import main.mmwork.com.mmworklib.db.entity.NetWorkRsultEntity;
 import main.mmwork.com.mmworklib.http.builder.MapParamsConverter;
@@ -177,6 +178,13 @@ public class HttpWork {
         cacheEntity.url = urlKey;
         cacheEntity.resultJsonStr = result;
         return cacheEntity;
+    }
+
+    /**
+     * 清除缓存
+     */
+    public void clearCache() {
+        DatabaseHelper.getInstance(context).clearDb();
     }
 
     /**

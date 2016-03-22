@@ -73,7 +73,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 int oldVer = mSharePre.getTBVerByName(tbInfo.tbName);
                 int newVer = tbInfo.tbVer;
                 if (newVer != oldVer) {
-                    TableUtils.clearTable(connectionSource, clazz);
+                    TableUtils.dropTable(connectionSource, clazz, true);
+                    TableUtils.createTable(connectionSource, clazz);
                     //save table version
                     mSharePre.saveTBVer(tbInfo.tbName, tbInfo.tbVer);
                 }
@@ -82,6 +83,22 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+
+    public void clearDb() {
+        try {
+            Map<Class<?>, TableInfo> mMap = DataBaseCommon.mMap;
+            DataBaseSharePre mSharePre = new DataBaseSharePre(context);
+            for (Map.Entry<Class<?>, TableInfo> entry : mMap.entrySet()) {
+                Class<?> clazz = entry.getKey();
+                TableInfo tbInfo = entry.getValue();
+                TableUtils.dropTable(connectionSource, clazz, true);
+                TableUtils.createTable(connectionSource, clazz);
+                //save table version
+                mSharePre.saveTBVer(tbInfo.tbName, tbInfo.tbVer);
+            }
+        } catch (SQLException e) {
+        }
+    }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
