@@ -1,6 +1,7 @@
 package main.mmwork.com.mmworklib.db.dao;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
 
@@ -44,6 +45,7 @@ public class CacheEntityDao {
             Dao.CreateOrUpdateStatus createOrUpdateStatus = mCacheDao.createOrUpdate(user);
             cnt++;
         } catch (SQLException e) {
+            Log.e(TAG, e.getMessage());
         }
         return cnt;
     }

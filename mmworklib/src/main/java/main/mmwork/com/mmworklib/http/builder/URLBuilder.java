@@ -19,6 +19,8 @@ public interface URLBuilder {
 
     public Map<String, Object> getParams();
 
+     public Map<String, Object> getCacheKeyParams();
+
     public boolean getisJson();
 
     @Target(ElementType.TYPE)

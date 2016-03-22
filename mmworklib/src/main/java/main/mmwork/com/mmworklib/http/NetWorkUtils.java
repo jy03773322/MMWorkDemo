@@ -229,10 +229,9 @@ public class NetWorkUtils {
 
     /**
      * 从Utils中剥离出
-     * <功能详细描述>判断网络是否可用<br>
+     * 判断网络是否可用
      *
      * @param context
-     * @return<br>
      */
     public static boolean isNetworkAvailable(Context context) {
         return isNetworkActive();

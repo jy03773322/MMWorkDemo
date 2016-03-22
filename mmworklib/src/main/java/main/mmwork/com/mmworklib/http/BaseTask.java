@@ -2,7 +2,6 @@ package main.mmwork.com.mmworklib.http;
 
 /***
  * Http请求单元
- * Params T --> 请求数据体
  */
 public abstract class BaseTask<REQ>{
 	protected REQ req;

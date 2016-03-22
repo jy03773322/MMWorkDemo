@@ -41,6 +41,11 @@ public class DefaultURLBuilder implements URLBuilder {
     }
 
     @Override
+    public Map<String, Object> getCacheKeyParams() {
+        return getParams();
+    }
+
+    @Override
     public boolean getisJson() {
         return false;
     }

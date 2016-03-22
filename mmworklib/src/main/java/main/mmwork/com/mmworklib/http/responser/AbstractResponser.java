@@ -13,7 +13,7 @@ public abstract class AbstractResponser {
     private final String RET_CODE = "code";
     private final String RET_MSG = "desc";
     private final int SUCCESS_CODE = 0;
-    private final String DEFAULT_ERROR_MESSAGE = "网络较差，请重试";
+    private final String DEFAULT_ERROR_MESSAGE = "网络不稳定，请重试";
 
     public boolean isCache = false;
     public boolean isSuccess = false;

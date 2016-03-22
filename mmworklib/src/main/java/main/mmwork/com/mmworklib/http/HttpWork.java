@@ -3,9 +3,6 @@ package main.mmwork.com.mmworklib.http;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.RequestBody;
-
 import main.mmwork.com.mmworklib.db.dao.CacheEntityDao;
 import main.mmwork.com.mmworklib.db.entity.NetWorkRsultEntity;
 import main.mmwork.com.mmworklib.http.builder.MapParamsConverter;
@@ -15,9 +12,11 @@ import main.mmwork.com.mmworklib.http.builder.URLBuilderFactory;
 import main.mmwork.com.mmworklib.http.builder.URLBuilderHelper;
 import main.mmwork.com.mmworklib.http.callback.NetworkCallback;
 import main.mmwork.com.mmworklib.http.responser.AbstractResponser;
+import main.mmwork.com.mmworklib.rxandroid.schedulers.AndroidSchedulers;
+import okhttp3.Call;
+import okhttp3.RequestBody;
 import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -60,6 +59,7 @@ public class HttpWork {
             source = reqNetWork(callback, builder, rspClass, isPost);
         }
         final Observable<T> observable = source
+//                .observeOn(Schedulers.io())
                 .map(new Func1<NetWorkRsultEntity, T>() {
                     @Override
                     public T call(NetWorkRsultEntity s) {
@@ -85,7 +85,7 @@ public class HttpWork {
                             if (t.isSuccess) {
                                 callback.onSucessed(t);
                             } else if (!t.isCache) {
-                                callback.onFilled(t.errorCode, t.errorMessage);
+                                callback.onFailed(t.errorCode, t.errorMessage);
                             }
                         }
                     }
@@ -158,7 +158,7 @@ public class HttpWork {
         Observable<NetWorkRsultEntity> observable = Observable.create(new Observable.OnSubscribe<NetWorkRsultEntity>() {
             @Override
             public void call(Subscriber<? super NetWorkRsultEntity> subscriber) {
-                String urlKey = URLBuilderHelper.getUrlStr(builder.getUrl(), builder.getParams());
+                String urlKey = URLBuilderHelper.getUrlStr(builder.getUrl(), builder.getCacheKeyParams());
                 NetWorkRsultEntity cacheEntity = cacheEntityDao.queryForID(urlKey);
                 if (null == cacheEntity) {
                     cacheEntity = new NetWorkRsultEntity();
@@ -173,7 +173,7 @@ public class HttpWork {
 
     private NetWorkRsultEntity createCacheEntity(URLBuilder builder, String result) {
         NetWorkRsultEntity cacheEntity = new NetWorkRsultEntity();
-        String urlKey = URLBuilderHelper.getUrlStr(builder.getUrl(), builder.getParams());
+        String urlKey = URLBuilderHelper.getUrlStr(builder.getUrl(), builder.getCacheKeyParams());
         cacheEntity.url = urlKey;
         cacheEntity.resultJsonStr = result;
         return cacheEntity;
@@ -191,7 +191,9 @@ public class HttpWork {
         return OkHttpWork.downLoad(url, filePath, progressListener);
     }
 
-    public void cancel(Object tag) {
-        OkHttpWork.cancel(tag);
+    public static void cancel(Object... tags) {
+        for (Object tag : tags) {
+            OkHttpWork.cancel(tag);
+        }
     }
 }

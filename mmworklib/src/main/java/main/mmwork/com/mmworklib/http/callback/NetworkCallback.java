@@ -10,6 +10,6 @@ public interface NetworkCallback<T extends AbstractResponser> {
 
     public void onSucessed(T rsp);
 
-    public void onFilled(int code, String msg);
+    public void onFailed(int code, String msg);
 
 }

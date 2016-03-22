@@ -1,13 +1,14 @@
 package main.mmwork.com.mmworklib.http.builder;
 
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.RequestBody;
 
-import org.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.Map;
 
 import main.mmwork.com.mmworklib.http.OkHttpWork;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 
 /**
  * Created by zhai on 16/1/18.
@@ -15,7 +16,7 @@ import main.mmwork.com.mmworklib.http.OkHttpWork;
 public class MapParamsConverter {
 
     public static RequestBody map2ForBody(Map<String, Object> map) {
-        FormEncodingBuilder builder = new FormEncodingBuilder();
+        FormBody.Builder builder = new FormBody.Builder();
         if (map == null || map.size() == 0) return builder.build();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String key = entry.getKey();
@@ -28,8 +29,9 @@ public class MapParamsConverter {
     }
 
     public static RequestBody map2ForJSON(Map<String, Object> map) {
-        JSONObject jsonObject = new JSONObject(map);
-        RequestBody body = RequestBody.create(OkHttpWork.JSON, jsonObject.toString());
+        Gson gson = new GsonBuilder().create();
+        String jsonStirng = gson.toJson(map);
+        RequestBody body = RequestBody.create(OkHttpWork.JSON, jsonStirng);
         return body;
     }
 

@@ -54,7 +54,7 @@ public class URLBuilderHelper {
                 String k = entry.getKey();
                 String v = entry.getValue().toString();
                 int index = urlBuffer.lastIndexOf("?");
-                if (index != urlBuffer.length()) {
+                if (index != urlBuffer.length()-1) {
                     urlBuffer.append("&");
                 }
                 urlBuffer.append(k + "=" + v);

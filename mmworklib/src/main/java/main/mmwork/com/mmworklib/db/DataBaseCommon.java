@@ -18,12 +18,12 @@ public class DataBaseCommon {
     //db名称
     public static final String DB_NAME = "httpcache.db";
     //db version
-    public static final int DB_VERSION = 1;
+    public static final int DB_VERSION = 2;
 
     public static final Map<Class<?>, TableInfo> mMap = new HashMap<Class<?>, TableInfo>();
 
     static {
         //table TimeLineDataTable version 1
-        mMap.put(NetWorkRsultEntity.class, new TableInfo(HTTP_CACHE_TABLE, 1));
+        mMap.put(NetWorkRsultEntity.class, new TableInfo(HTTP_CACHE_TABLE, 2));
     }
 }

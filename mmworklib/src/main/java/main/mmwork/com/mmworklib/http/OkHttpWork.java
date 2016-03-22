@@ -1,13 +1,5 @@
 package main.mmwork.com.mmworklib.http;
 
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,19 +10,37 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Created by zhai on 15/11/30.
  */
 public class OkHttpWork {
 
+    private final static int TIME_OUT_MINUTES = 5000;
+
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+//    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
 
     public static OkHttpClient client;
     private static ConcurrentHashMap<WeakReference<Object>, ArrayList<Call>> callConcurrentHashMap = new ConcurrentHashMap<>();
 
     static {
-        client = new OkHttpClient();
+        client = new OkHttpClient.Builder()
+                .connectTimeout(TIME_OUT_MINUTES, TimeUnit.MINUTES)
+                .readTimeout(TIME_OUT_MINUTES, TimeUnit.MINUTES)
+                .writeTimeout(TIME_OUT_MINUTES, TimeUnit.MINUTES)
+                .build();
     }
 
     public static String get(Object tag, String url) {
@@ -89,7 +99,7 @@ public class OkHttpWork {
         return null;
     }
 
-    public static String post(Object tag, String url, RequestBody formBody ) {
+    public static String post(Object tag, String url, RequestBody formBody) {
         Request request = new Request.Builder()
                 .url(url)
                 .post(formBody)
@@ -131,17 +141,16 @@ public class OkHttpWork {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
-        OkHttpClient cloneClient = client.clone();
-        addIter(cloneClient, progressListener);
+        OkHttpClient cloneClient = newIterClient(client, progressListener);
         Call call = cloneClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
-                System.out.println("failure");
+            public void onFailure(Call call, IOException e) {
+
             }
 
             @Override
-            public void onResponse(Response response) {
+            public void onResponse(Call call, Response response) throws IOException {
                 try {
                     //将返回结果转化为流，并写入文件
                     int len;
@@ -170,7 +179,7 @@ public class OkHttpWork {
 
     public static void addIter(OkHttpClient cloneClient, final ProgressListener progressListener) {
         //添加拦截器，自定义ResponseBody，添加下载进度
-        cloneClient.networkInterceptors().add(new Interceptor() {
+        cloneClient.interceptors().add(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Response originalResponse = chain.proceed(chain.request());
@@ -182,4 +191,16 @@ public class OkHttpWork {
     }
 
 
+    public static OkHttpClient newIterClient(OkHttpClient cloneClient, final ProgressListener progressListener) {
+        //添加拦截器，自定义ResponseBody，添加下载进度
+        return cloneClient.newBuilder().addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Response originalResponse = chain.proceed(chain.request());
+                return originalResponse.newBuilder().body(
+                        new ProgressResponseBody(originalResponse.body(), progressListener))
+                        .build();
+            }
+        }).build();
+    }
 }
