@@ -2,14 +2,14 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 // 根节点添加
-version = "0.3.3.8.7"
+version = "0.3.3.8.9"
 def siteUrl = 'https://github.com/jy03773322/mmworklib'    // project homepage
 def gitUrl = 'https://github.com/jy03773322/mmworklib.git' // project git
 group = "com.mmwork"
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion '23.0.2'
     resourcePrefix "mmWork"
     defaultConfig {
         minSdkVersion 10

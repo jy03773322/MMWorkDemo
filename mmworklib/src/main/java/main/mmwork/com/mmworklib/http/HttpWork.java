@@ -13,6 +13,8 @@ import main.mmwork.com.mmworklib.http.builder.URLBuilderFactory;
 import main.mmwork.com.mmworklib.http.builder.URLBuilderHelper;
 import main.mmwork.com.mmworklib.http.callback.NetworkCallback;
 import main.mmwork.com.mmworklib.http.responser.AbstractResponser;
+import main.mmwork.com.mmworklib.http.upload.ProgressHelper;
+import main.mmwork.com.mmworklib.http.upload.UIProgressListener;
 import main.mmwork.com.mmworklib.rxandroid.schedulers.AndroidSchedulers;
 import okhttp3.Call;
 import okhttp3.RequestBody;
@@ -44,20 +46,24 @@ public class HttpWork {
     }
 
     public <T extends AbstractResponser> Observable<T> get(ParamEntity paramEntity, final Class<T> rspClass, NetworkCallback<T> callback, boolean isNeedCache) {
-        return req(paramEntity, rspClass, callback, false, isNeedCache);
+        return req(paramEntity, rspClass, callback, null, false, isNeedCache);
     }
 
     public <T extends AbstractResponser> Observable<T> post(ParamEntity paramEntity, final Class<T> rspClass, NetworkCallback<T> callback, boolean isNeedCache) {
-        return req(paramEntity, rspClass, callback, true, isNeedCache);
+        return req(paramEntity, rspClass, callback, null, true, isNeedCache);
     }
 
-    public <T extends AbstractResponser> Observable<T> req(ParamEntity paramEntity, final Class<T> rspClass, final NetworkCallback<T> callback, boolean isPost, boolean isNeedCache) {
+    public <T extends AbstractResponser> Observable<T> post(ParamEntity paramEntity, final Class<T> rspClass, NetworkCallback<T> callback, final UIProgressListener uiProgressRequestListener, boolean isNeedCache) {
+        return req(paramEntity, rspClass, callback, uiProgressRequestListener, true, isNeedCache);
+    }
+
+    public <T extends AbstractResponser> Observable<T> req(ParamEntity paramEntity, final Class<T> rspClass, final NetworkCallback<T> callback, final UIProgressListener uiProgressRequestListener, boolean isPost, boolean isNeedCache) {
         URLBuilder builder = URLBuilderFactory.build(paramEntity);
         final Observable<NetWorkRsultEntity> source;
         if (isNeedCache) {
-            source = Observable.merge(reqCache(builder), reqNetWork(callback, builder, rspClass, isPost));
+            source = Observable.merge(reqCache(builder), reqNetWork(callback, builder, rspClass, uiProgressRequestListener, isPost));
         } else {
-            source = reqNetWork(callback, builder, rspClass, isPost);
+            source = reqNetWork(callback, builder, rspClass, uiProgressRequestListener, isPost);
         }
         final Observable<T> observable = source
 //                .observeOn(Schedulers.io())
@@ -99,20 +105,27 @@ public class HttpWork {
      *
      * @param builder
      */
-    private <T extends AbstractResponser> Observable<NetWorkRsultEntity> reqNetWork(final Object tag, final URLBuilder builder, final Class<T> rspClass, final boolean isPost) {
+    private <T extends AbstractResponser> Observable<NetWorkRsultEntity> reqNetWork(final Object tag, final URLBuilder builder, final Class<T> rspClass, final UIProgressListener uiProgressRequestListener, final boolean isPost) {
         Observable<NetWorkRsultEntity> observable = Observable.create(new Observable.OnSubscribe<NetWorkRsultEntity>() {
             @Override
             public void call(Subscriber<? super NetWorkRsultEntity> subscriber) {
                 String resultJsonStr = "";
                 if (isPost) {
-                    RequestBody body;
+                    RequestBody body = null;
                     //post
-                    if (builder.getisJson()) {
+                    if (URLBuilder.REQ_TYPE_JSON == builder.getReqType()) {
                         //JSON格式请求
                         body = MapParamsConverter.map2ForJSON(builder.getParams());
-                    } else {
+                    } else if (URLBuilder.REQ_TYPE_KV == builder.getReqType()) {
                         //KV格式请求
                         body = MapParamsConverter.map2ForBody(builder.getParams());
+                    } else if (URLBuilder.REQ_TYPE_FILE == builder.getReqType()) {
+                        //KV格式请求
+                        body = MapParamsConverter.map2ForMultBody(builder.getParams());
+                        if (null != uiProgressRequestListener) {
+                            //判断是否有上传进度listener
+                            body = ProgressHelper.addProgressRequestListener(body, uiProgressRequestListener);
+                        }
                     }
                     resultJsonStr = OkHttpWork.post(tag, builder.getUrl(), body);
                 } else {

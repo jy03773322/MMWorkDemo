@@ -46,8 +46,8 @@ public class DefaultURLBuilder implements URLBuilder {
     }
 
     @Override
-    public boolean getisJson() {
-        return false;
+    public byte getReqType() {
+        return REQ_TYPE_KV;
     }
 
     /**

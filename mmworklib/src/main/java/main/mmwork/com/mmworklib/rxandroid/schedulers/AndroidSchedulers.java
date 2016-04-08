@@ -16,8 +16,15 @@ public class AndroidSchedulers {
     }
 
     private static class WorkThreadSchedulerHolder {
+        static HandlerThread workThread;
+
+        static {
+            workThread = new HandlerThread("AndroidSchedulersWorkThread");
+            workThread.start();
+        }
+
         static final Scheduler WORK_THREAD_SCHEDULER =
-                new HandlerScheduler(new Handler(new HandlerThread("AndroidSchedulersWorkThread").getLooper()));
+                new HandlerScheduler(new Handler(workThread.getLooper()));
     }
 
 
@@ -39,6 +46,7 @@ public class AndroidSchedulers {
 
     /**
      * single thread
+     *
      * @return
      */
     public static Scheduler workThread() {

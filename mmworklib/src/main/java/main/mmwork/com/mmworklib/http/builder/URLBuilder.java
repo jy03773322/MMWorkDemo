@@ -13,15 +13,20 @@ import java.util.Map;
  * Created by xiaomeng.zhai on 2014/6/26.
  */
 public interface URLBuilder {
+
+    public static final byte REQ_TYPE_KV = 0;
+    public static final byte REQ_TYPE_JSON = 1;
+    public static final byte REQ_TYPE_FILE = 2;
+
     public void parse(Path path, Map<String, Field> cachedFields, ParamEntity entity) throws IllegalAccessException;
 
     public String getUrl();
 
     public Map<String, Object> getParams();
 
-     public Map<String, Object> getCacheKeyParams();
+    public Map<String, Object> getCacheKeyParams();
 
-    public boolean getisJson();
+    public byte getReqType();
 
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
