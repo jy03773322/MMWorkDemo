@@ -31,7 +31,6 @@ public class OkHttpWork {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 //    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-
     public static OkHttpClient client;
     private static ConcurrentHashMap<WeakReference<Object>, ArrayList<Call>> callConcurrentHashMap = new ConcurrentHashMap<>();
 
