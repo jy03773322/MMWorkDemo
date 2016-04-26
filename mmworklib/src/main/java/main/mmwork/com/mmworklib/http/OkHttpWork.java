@@ -137,7 +137,7 @@ public class OkHttpWork {
         return call;
     }
 
-    public static Call downLoad(String url, final String filePath, ProgressListener progressListener) {
+    public static Call downLoad(String url, final String filePath, final ProgressListener progressListener) {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -146,7 +146,7 @@ public class OkHttpWork {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                progressListener.onFailure(call,e);
             }
 
             @Override

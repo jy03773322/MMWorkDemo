@@ -61,9 +61,9 @@ public class HttpWork {
         URLBuilder builder = URLBuilderFactory.build(paramEntity);
         final Observable<NetWorkRsultEntity> source;
         if (isNeedCache) {
-            source = Observable.merge(reqCache(builder), reqNetWork(callback, builder, rspClass, uiProgressRequestListener, isPost));
+            source = Observable.merge(reqCache(builder), reqNetWork(callback, builder, rspClass, uiProgressRequestListener, isPost,isNeedCache));
         } else {
-            source = reqNetWork(callback, builder, rspClass, uiProgressRequestListener, isPost);
+            source = reqNetWork(callback, builder, rspClass, uiProgressRequestListener, isPost,isNeedCache);
         }
         final Observable<T> observable = source
 //                .observeOn(Schedulers.io())
@@ -105,7 +105,7 @@ public class HttpWork {
      *
      * @param builder
      */
-    private <T extends AbstractResponser> Observable<NetWorkRsultEntity> reqNetWork(final Object tag, final URLBuilder builder, final Class<T> rspClass, final UIProgressListener uiProgressRequestListener, final boolean isPost) {
+    private <T extends AbstractResponser> Observable<NetWorkRsultEntity> reqNetWork(final Object tag, final URLBuilder builder, final Class<T> rspClass, final UIProgressListener uiProgressRequestListener, final boolean isPost,final boolean isCache) {
         Observable<NetWorkRsultEntity> observable = Observable.create(new Observable.OnSubscribe<NetWorkRsultEntity>() {
             @Override
             public void call(Subscriber<? super NetWorkRsultEntity> subscriber) {
@@ -143,7 +143,9 @@ public class HttpWork {
                 .doOnNext(new Action1<NetWorkRsultEntity>() {
                     @Override
                     public void call(NetWorkRsultEntity entity) {
-                        saveCache(builder, entity.resultJsonStr, rspClass);
+                        if(isCache){
+                            saveCache(builder, entity.resultJsonStr, rspClass);
+                        }
                     }
                 });
         return observable;

@@ -45,7 +45,7 @@ public class MapParamsConverter {
             String key = entry.getKey();
             String value = (String) entry.getValue();
             if (!key.equals(FILE_KEY)) {
-                builder.addFormDataPart(entry.getKey(), (String) entry.getValue());
+                builder.addFormDataPart(entry.getKey(), value);
             } else {
                 File uploadFile = new File((String) entry.getValue());
                 builder.addFormDataPart(FILE_KEY, uploadFile.getName(), RequestBody.create(null, uploadFile));

@@ -10,8 +10,8 @@ import java.util.Map;
  */
 public class DefaultURLBuilder implements URLBuilder {
 
-    private String url;
-    private Map<String, Object> paramsMap;
+    protected String url;
+    protected Map<String, Object> paramsMap;
 
     @Override
     public void parse(Path path, Map<String, Field> fields,

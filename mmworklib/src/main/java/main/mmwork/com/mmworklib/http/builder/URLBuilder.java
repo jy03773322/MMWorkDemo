@@ -35,8 +35,6 @@ public interface URLBuilder {
 
         public String url();
 
-        public boolean isJson() default false;
-
         public String[] sign() default "";
 
         public String[] encrypt() default "";
