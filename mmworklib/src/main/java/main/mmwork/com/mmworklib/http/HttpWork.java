@@ -66,7 +66,6 @@ public class HttpWork {
             source = reqNetWork(callback, builder, rspClass, uiProgressRequestListener, isPost,isNeedCache);
         }
         final Observable<T> observable = source
-//                .observeOn(Schedulers.io())
                 .map(new Func1<NetWorkRsultEntity, T>() {
                     @Override
                     public T call(NetWorkRsultEntity s) {
@@ -139,7 +138,7 @@ public class HttpWork {
                 subscriber.onNext(cacheEntity);
             }
         })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .doOnNext(new Action1<NetWorkRsultEntity>() {
                     @Override
                     public void call(NetWorkRsultEntity entity) {
@@ -183,7 +182,7 @@ public class HttpWork {
                 subscriber.onNext(cacheEntity);
             }
         })
-                .subscribeOn(Schedulers.io());
+                .subscribeOn(Schedulers.computation());
         return observable;
     }
 
