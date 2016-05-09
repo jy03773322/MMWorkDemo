@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.android.databinding'
 
 android {
-    compileSdkVersion 'Google Inc.:Google APIs:23'
-    buildToolsVersion "23.0.1"
-
+    compileSdkVersion 23
+    buildToolsVersion '23.0.2'
     defaultConfig {
         applicationId "yanzhi.xingyun.com.mmworkdemo"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -17,6 +17,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+    }
+
+//    dataBinding {
+//        enabled = true
+//    }
 }
 
 dependencies {

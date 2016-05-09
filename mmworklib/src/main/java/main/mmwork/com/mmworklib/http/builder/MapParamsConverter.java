@@ -55,8 +55,12 @@ public class MapParamsConverter {
     }
 
     public static RequestBody map2ForJSON(Map<String, Object> map) {
+        String jsonStirng = "";
+
         Gson gson = new GsonBuilder().create();
-        String jsonStirng = gson.toJson(map);
+        if (map.size() > 0) {
+            jsonStirng = gson.toJson(map);
+        }
         RequestBody body = RequestBody.create(OkHttpWork.JSON, jsonStirng);
         return body;
     }
