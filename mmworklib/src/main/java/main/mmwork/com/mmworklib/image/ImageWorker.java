@@ -280,6 +280,7 @@ public class ImageWorker {
                     .bitmapTransform(new BlurTransformation(context, 20));
             return stringDrawableTypeRequest;
         }
+
         return null;
     }
 

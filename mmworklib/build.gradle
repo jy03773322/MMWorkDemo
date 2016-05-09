@@ -3,20 +3,21 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 // 根节点添加
-version = "0.3.4.9.5"
+version = "0.3.4.9.9.1"
 def siteUrl = 'https://github.com/jy03773322/mmworklib'    // project homepage
 def gitUrl = 'https://github.com/jy03773322/mmworklib.git' // project git
 group = "com.mmwork"
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '23.0.3'
     resourcePrefix "mmWork"
     defaultConfig {
         minSdkVersion 18
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -29,6 +30,9 @@ android {
 
     dataBinding {
         enabled = true
+    }
+    dexOptions {
+        incremental true
     }
 }
 buildscript {
@@ -51,10 +55,9 @@ dependencies {
     compile files('libs/ormlite-core-4.48.jar')
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
-    compile 'com.android.support:design:23.2.1'
-    compile files('libs/android-support-v4.jar')
-    compile files('libs/android-support-v7-appcompat.jar')
-    compile files('libs/android-support-v7-recyclerview.jar')
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.android.support:design:23.3.0'
 }
 
 // 根节点添加
@@ -88,28 +91,6 @@ install {
         }
     }
 }
-
-//task sourcesJar(type: Jar) {
-//    from android.sourceSets.main.java.srcDirs
-//    classifier = 'sources'
-//}
-//
-//task javadoc(type: Javadoc) {
-//    source = android.sourceSets.main.java.srcDirs
-//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-////    classpath += project.files(configurations.compile.files,android.getBootClasspath().join(File.pathSeparator))
-//
-//}
-//
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
-//}
-//
-//artifacts {
-//    archives javadocJar
-//    archives sourcesJar
-//}
 
 task androidJavadocs(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
