@@ -212,6 +212,7 @@ public class FileUtils {
         } catch (NullPointerException e) {
             Log.e(TAG, "NullPointerException", e);
         } finally {
+
             try {
                 if (fos != null) {
                     fos.flush();
