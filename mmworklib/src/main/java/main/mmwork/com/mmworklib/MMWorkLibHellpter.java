@@ -11,8 +11,8 @@ import main.mmwork.com.mmworklib.utils.FileUtils;
  */
 public class MMWorkLibHellpter {
 
-    public static void init(String sdPath) {
-        FileUtils.init(sdPath);
+    public static void initImageSdPath(String sdPath) {
+        FileUtils.initImageSdPath(sdPath);
     }
 
     /**

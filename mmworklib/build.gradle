@@ -1,10 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.android.databinding'
 
 // 根节点添加
-version = "0.3.4.8"
+version = "0.3.4.9.5"
 def siteUrl = 'https://github.com/jy03773322/mmworklib'    // project homepage
 def gitUrl = 'https://github.com/jy03773322/mmworklib.git' // project git
 group = "com.mmwork"
@@ -28,9 +27,9 @@ android {
     productFlavors {
     }
 
-//    dataBinding {
-//        enabled = true
-//    }
+    dataBinding {
+        enabled = true
+    }
 }
 buildscript {
     repositories {
@@ -52,6 +51,7 @@ dependencies {
     compile files('libs/ormlite-core-4.48.jar')
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
+    compile 'com.android.support:design:23.2.1'
     compile files('libs/android-support-v4.jar')
     compile files('libs/android-support-v7-appcompat.jar')
     compile files('libs/android-support-v7-recyclerview.jar')

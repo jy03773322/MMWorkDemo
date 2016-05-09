@@ -37,10 +37,10 @@ public class FileUtils {
 
 
     private static final int IMG_QUALITY = 60;
-    public static String SDPATH ;
+    public static String ImageSdPath;
 
-    public static void init(String sdpath) {
-        SDPATH = sdpath;
+    public static void initImageSdPath(String imageSdPath) {
+        ImageSdPath = imageSdPath;
     }
 
     /**
@@ -197,7 +197,7 @@ public class FileUtils {
             if (!TextUtils.isEmpty(path)) {
                 file = new File(path, picName + ".JPEG");
             } else {
-                file = new File(SDPATH, picName + ".JPEG");
+                file = new File(ImageSdPath, picName + ".JPEG");
             }
             if (file.exists()) {
                 file.delete();
@@ -226,13 +226,13 @@ public class FileUtils {
     }
 
     public static boolean isFileExist(String fileName) {
-        File file = new File(SDPATH + fileName);
+        File file = new File(ImageSdPath + fileName);
         file.isFile();
         return file.exists();
     }
 
     public static File createSDDir(String dirName) throws IOException {
-        File dir = new File(SDPATH + dirName);
+        File dir = new File(ImageSdPath + dirName);
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 
         }
