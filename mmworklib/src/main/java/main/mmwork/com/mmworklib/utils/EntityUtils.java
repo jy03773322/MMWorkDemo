@@ -9,8 +9,10 @@ import java.lang.reflect.Method;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by zhai on 16/3/3.
@@ -18,11 +20,82 @@ import java.util.Map;
  */
 public class EntityUtils {
 
+    public static ConcurrentHashMap<String, ConcurrentHashMap<String, Method>[]> classGetAndSetMethodMap = new ConcurrentHashMap<>();
+
+    /**
+     * 调用Class的get方法取出数据，并调用接收数据对象的set方法赋值
+     *
+     * @param object
+     * @param resultObject
+     * @param <T>
+     */
     public static <T extends Object> void resolveAllFieldsSet(final T object, T resultObject) {
         if (null == object || null == resultObject) {
             return;
         }
-        setFieldValue(object, getFieldValueMap(resultObject));
+        Class cls = resultObject.getClass();
+        ConcurrentHashMap<String, Method>[] concurrentHashMapArray = searchGetAndSetMethods(cls);
+        Iterator<Map.Entry<String, Method>> iterator = concurrentHashMapArray[0].entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Method> entry = iterator.next();
+            String fieldName = entry.getKey();
+            Method getMethod = entry.getValue();
+            Method setMethod = concurrentHashMapArray[1].get(fieldName);
+            if (null == setMethod || null == getMethod) {
+                continue;
+            }
+
+            try {
+                Object fieldVal = getMethod.invoke(resultObject, new Object[]{});
+                setMethod.invoke(object, fieldVal);
+            } catch (Exception e) {
+                continue;
+            }
+        }
+    }
+
+    /**
+     * 遍历class的get&set方便，并存入数组中缓存
+     *
+     * @param cls
+     * @return
+     */
+    private static ConcurrentHashMap<String, Method>[] searchGetAndSetMethods(Class<?> cls) {
+        String className = cls.getName();
+        ConcurrentHashMap<String, Method>[] getSetMethodArray = null;
+        getSetMethodArray = classGetAndSetMethodMap.get(className);
+        if (null == getSetMethodArray) {
+            ConcurrentHashMap<String, Method> getMethodsMap = new ConcurrentHashMap<>();
+            ConcurrentHashMap<String, Method> setMethodsMap = new ConcurrentHashMap<>();
+
+            Method[] methods = cls.getDeclaredMethods();
+            for (Method method : methods) {
+                try {
+                    method.setAccessible(true);
+                    String methodName = method.getName();
+
+                    if (isGetMethod(methodName)) {
+                        String fieldName = getMethodField(methodName);
+                        getMethodsMap.put(fieldName, method);
+                        continue;
+                    }
+
+                    if (isSetMethod(methodName)) {
+                        String fieldName = getMethodField(methodName);
+                        setMethodsMap.put(fieldName, method);
+                        continue;
+                    }
+
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+            getSetMethodArray = new ConcurrentHashMap[2];
+            getSetMethodArray[0] = getMethodsMap;
+            getSetMethodArray[1] = setMethodsMap;
+            classGetAndSetMethodMap.put(className, getSetMethodArray);
+        }
+        return getSetMethodArray;
     }
 
     public static <T extends Object> Object resolveAllFields(Class cls, T object, T resultObject) {
@@ -166,6 +239,27 @@ public class EntityUtils {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static String getMethodField(String getMethodName) {
+        String fieldName = getMethodName.substring(3, getMethodName.length());
+        return fieldName;
+    }
+
+    public static boolean isGetMethod(String methodName) {
+        int index = methodName.indexOf("get");
+        if (index == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isSetMethod(String methodName) {
+        int index = methodName.indexOf("set");
+        if (index == 0) {
+            return true;
+        }
+        return false;
     }
 
     /**

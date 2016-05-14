@@ -1,5 +1,6 @@
 package main.mmwork.com.mmworklib.image;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
@@ -109,6 +110,9 @@ public class ImageWorker {
     }
 
     public static void imageLoader(Context context, ImageView view, String url) {
+        if (context instanceof Activity && ((Activity) context).isDestroyed()) {
+            return;
+        }
         if (!TextUtils.isEmpty(url)) {
             Glide.with(context)
                     .load(url)
@@ -265,6 +269,17 @@ public class ImageWorker {
         }
     }
 
+    public static void imageLoaderRadius(final Context context, final ImageView view, String url, int radius) {
+        if (!TextUtils.isEmpty(url)) {
+            Glide.with(context)
+                    .load(url)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .bitmapTransform(new RoundedCornersTransformation(context, radius, 0))
+                    .into(view);
+
+        }
+    }
+
     /**
      * 获得高斯模糊stringDrawableTypeRequest
      *
@@ -281,6 +296,39 @@ public class ImageWorker {
             return stringDrawableTypeRequest;
         }
 
+        return null;
+    }
+
+    public static DrawableTypeRequest<String> buildRoundedImageRequest(final Context context, String url, int radius) {
+        if (!TextUtils.isEmpty(url)) {
+            DrawableTypeRequest<String> stringDrawableTypeRequest = Glide.with(context).load(url);
+            stringDrawableTypeRequest
+                    .bitmapTransform(new RoundedCornersTransformation(context, radius, 0))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+            return stringDrawableTypeRequest;
+        }
+        return null;
+    }
+
+    public static DrawableTypeRequest<String> buildFitCenterImageRequest(final Context context, String url) {
+        if (!TextUtils.isEmpty(url)) {
+            DrawableTypeRequest<String> stringDrawableTypeRequest = Glide.with(context).load(url);
+            stringDrawableTypeRequest
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .fitCenter();
+            return stringDrawableTypeRequest;
+        }
+        return null;
+    }
+
+    public static DrawableTypeRequest<String> buildCenterCropImageRequest(final Context context, String url) {
+        if (!TextUtils.isEmpty(url)) {
+            DrawableTypeRequest<String> stringDrawableTypeRequest = Glide.with(context).load(url);
+            stringDrawableTypeRequest
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .centerCrop();
+            return stringDrawableTypeRequest;
+        }
         return null;
     }
 

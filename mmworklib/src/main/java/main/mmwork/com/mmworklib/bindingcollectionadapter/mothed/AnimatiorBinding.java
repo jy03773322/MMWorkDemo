@@ -27,6 +27,8 @@ public class AnimatiorBinding {
                 }
             });
             oa.start();
+        }else{
+            view.setVisibility(View.VISIBLE);
         }
     }
 

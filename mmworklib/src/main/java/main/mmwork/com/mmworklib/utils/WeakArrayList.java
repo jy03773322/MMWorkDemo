@@ -53,8 +53,10 @@ public class WeakArrayList<E> extends AbstractList<E> {
         items.add(index, new WeakReference(element));
     }
 
+
     public Iterator iterator() {
-        return new WeakListIterator();
+//        return new WeakListIterator();
+        return items.iterator();
     }
 
     public int size() {
@@ -66,7 +68,7 @@ public class WeakArrayList<E> extends AbstractList<E> {
         return ((WeakReference<E>) items.get(index)).get();
     }
 
-    private void removeReleased() {
+    public void removeReleased() {
         for (Iterator it = items.iterator(); it.hasNext(); ) {
             WeakReference ref = (WeakReference) it.next();
             if (ref.get() == null) items.remove(ref);

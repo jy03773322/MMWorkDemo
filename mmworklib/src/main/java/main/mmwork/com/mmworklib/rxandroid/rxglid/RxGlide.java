@@ -1,5 +1,7 @@
 package main.mmwork.com.mmworklib.rxandroid.rxglid;
 
+import android.widget.ImageView;
+
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 
@@ -17,4 +19,10 @@ public class RxGlide {
         return Observable.create(new GlideAfterRequestOnSubscribe(request));
     }
 
+    public static Observable<GlideBitmapDrawable> afterGlideRequestListener(DrawableTypeRequest<String> request, ImageView imageView) {
+        if (null == request) {
+            return Observable.empty();
+        }
+        return Observable.create(new GlideAfterRequestOnSubscribe(request, imageView));
+    }
 }

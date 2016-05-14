@@ -57,13 +57,45 @@ public class HttpWork {
         return req(paramEntity, rspClass, callback, uiProgressRequestListener, true, isNeedCache);
     }
 
-    public <T extends AbstractResponser> Observable<T> req(ParamEntity paramEntity, final Class<T> rspClass, final NetworkCallback<T> callback, final UIProgressListener uiProgressRequestListener, boolean isPost, boolean isNeedCache) {
-        URLBuilder builder = URLBuilderFactory.build(paramEntity);
+    public <T extends AbstractResponser> Observable<T> req(ParamEntity paramEntity, final Class<T> rspClass, final NetworkCallback<T> callback, final UIProgressListener uiProgressRequestListener, final boolean isPost, final boolean isNeedCache) {
+        return Observable.just(paramEntity)
+                .subscribeOn(Schedulers.computation())
+                .map(new Func1<ParamEntity, URLBuilder>() {
+                    @Override
+                    public URLBuilder call(ParamEntity paramEntity) {
+                        URLBuilder builder = URLBuilderFactory.build(paramEntity);
+                        return builder;
+                    }
+                })
+                .flatMap(new Func1<URLBuilder, Observable<T>>() {
+                    @Override
+                    public Observable<T> call(URLBuilder urlBuilder) {
+                        return reqOKhttp(urlBuilder, rspClass, callback, uiProgressRequestListener, isPost, isNeedCache);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Action1<T>() {
+                    @Override
+                    public void call(T t) {
+                        if (null != callback) {
+                            if (t.isSuccess) {
+                                callback.onSucessed(t);
+                            } else if (!t.isCache) {
+                                callback.onFailed(t.errorCode, t.errorMessage);
+                            }
+                        }
+                    }
+                });
+    }
+
+    private <T extends AbstractResponser> Observable<T> reqOKhttp(URLBuilder builder, final Class<T> rspClass,
+                                                                  final NetworkCallback<T> callback,
+                                                                  final UIProgressListener uiProgressRequestListener, boolean isPost, boolean isNeedCache) {
         final Observable<NetWorkRsultEntity> source;
         if (isNeedCache) {
-            source = Observable.merge(reqCache(builder), reqNetWork(callback, builder, rspClass, uiProgressRequestListener, isPost,isNeedCache));
+            source = Observable.merge(reqCache(builder), reqNetWork(callback, builder, rspClass, uiProgressRequestListener, isPost, isNeedCache));
         } else {
-            source = reqNetWork(callback, builder, rspClass, uiProgressRequestListener, isPost,isNeedCache);
+            source = reqNetWork(callback, builder, rspClass, uiProgressRequestListener, isPost, isNeedCache);
         }
         final Observable<T> observable = source
                 .map(new Func1<NetWorkRsultEntity, T>() {
@@ -82,29 +114,17 @@ public class HttpWork {
 
                         return rsp;
                     }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Action1<T>() {
-                    @Override
-                    public void call(T t) {
-                        if (null != callback) {
-                            if (t.isSuccess) {
-                                callback.onSucessed(t);
-                            } else if (!t.isCache) {
-                                callback.onFailed(t.errorCode, t.errorMessage);
-                            }
-                        }
-                    }
                 });
         return observable;
     }
+
 
     /**
      * 查询网络数据
      *
      * @param builder
      */
-    private <T extends AbstractResponser> Observable<NetWorkRsultEntity> reqNetWork(final Object tag, final URLBuilder builder, final Class<T> rspClass, final UIProgressListener uiProgressRequestListener, final boolean isPost,final boolean isCache) {
+    private <T extends AbstractResponser> Observable<NetWorkRsultEntity> reqNetWork(final Object tag, final URLBuilder builder, final Class<T> rspClass, final UIProgressListener uiProgressRequestListener, final boolean isPost, final boolean isCache) {
         Observable<NetWorkRsultEntity> observable = Observable.create(new Observable.OnSubscribe<NetWorkRsultEntity>() {
             @Override
             public void call(Subscriber<? super NetWorkRsultEntity> subscriber) {
@@ -142,7 +162,7 @@ public class HttpWork {
                 .doOnNext(new Action1<NetWorkRsultEntity>() {
                     @Override
                     public void call(NetWorkRsultEntity entity) {
-                        if(isCache){
+                        if (isCache) {
                             saveCache(builder, entity.resultJsonStr, rspClass);
                         }
                     }

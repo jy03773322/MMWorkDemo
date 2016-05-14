@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.request.RequestListener;
 
 import main.mmwork.com.mmworklib.utils.ViewUtils;
+import yanzhi.xingyun.com.mmworklib.R;
 
 /**
  * Created by zhai on 16/2/19.
@@ -63,6 +64,16 @@ public class ImageWorkBinding {
     @BindingAdapter({"bind:loadBlurImage"})
     public static void loadBlurImage(ImageView view, String url) {
         ImageWorker.imageLoaderBlur(view.getContext(), view, url);
+    }
+
+    @BindingAdapter({"bind:loadRadiusImage", "imageRadius"})
+    public static void loadRadiusImage(ImageView view, String url, int radius) {
+        ImageWorker.imageLoaderRadius(view.getContext(), view, url, radius);
+    }
+
+    @BindingAdapter({"bind:loadRadiusImage"})
+    public static void loadRadiusImage(ImageView view, String url) {
+        ImageWorker.imageLoaderRadius(view.getContext(), view, url, view.getContext().getResources().getDimensionPixelSize(R.dimen.radius_max));
     }
 
     @BindingAdapter({"bind:loadImage"})

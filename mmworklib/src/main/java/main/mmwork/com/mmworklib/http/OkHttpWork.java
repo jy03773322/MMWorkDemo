@@ -1,15 +1,17 @@
 package main.mmwork.com.mmworklib.http;
 
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -25,6 +27,7 @@ import okhttp3.Response;
  * Created by zhai on 15/11/30.
  */
 public class OkHttpWork {
+    private static final String TAG = "OkHttpWork";
 
     private final static int TIME_OUT_MINUTES = 5000;
 
@@ -32,7 +35,7 @@ public class OkHttpWork {
 //    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     public static OkHttpClient client;
-    private static ConcurrentHashMap<WeakReference<Object>, ArrayList<Call>> callConcurrentHashMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<WeakReference<Object>, CopyOnWriteArrayList<Call>> callConcurrentHashMap = new ConcurrentHashMap<>();
 
     static {
         client = new OkHttpClient.Builder()
@@ -45,13 +48,15 @@ public class OkHttpWork {
     public static String get(Object tag, String url) {
         Request.Builder builder = new Request.Builder();
         Request request = builder.url(url).build();
+        Call call = client.newCall(request);
         try {
-            Call call = client.newCall(request);
             addHttpWorkTag(tag, call);
             Response response = call.execute();
             return response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            cancelCall(tag, call);
         }
         return null;
     }
@@ -62,12 +67,12 @@ public class OkHttpWork {
      * @param tag
      * @param call
      */
-    public synchronized static void addHttpWorkTag(Object tag, Call call) {
+    public static void addHttpWorkTag(Object tag, Call call) {
         if (null != tag) {
-            ArrayList<Call> calls = getCallList(tag);
+            CopyOnWriteArrayList<Call> calls = getCallList(tag);
             if (null == calls) {
                 //从未添加
-                calls = new ArrayList<>();
+                calls = new CopyOnWriteArrayList<>();
             }
             calls.add(call);
             WeakReference<Object> weakReference = new WeakReference<>(tag);
@@ -75,22 +80,50 @@ public class OkHttpWork {
         }
     }
 
-    public synchronized static void cancel(Object tag) {
-        ArrayList<Call> calls = getCallList(tag);
+    public static void cancel(Object tag) {
+        CopyOnWriteArrayList<Call> calls = getCallList(tag);
+        cancelCalls(calls);
+        callConcurrentHashMap.remove(tag);
+    }
+
+    public static void cancelCall(Object tag, Call cll) {
+        CopyOnWriteArrayList<Call> calls = getCallList(tag);
         if (null != calls) {
             for (Call call : calls) {
-                call.cancel();
+                if (call == cll) {
+                    if (!call.isCanceled()) {
+                        call.cancel();
+                        Log.d(TAG, "cancelCall: cancel");
+                    }
+                    calls.remove(call);
+                }
             }
         }
     }
 
-    public synchronized static ArrayList<Call> getCallList(Object tag) {
+    public static void cancelCalls(CopyOnWriteArrayList<Call> calls) {
+        if (null != calls) {
+            Log.d(TAG, "cancelCalls: ");
+            for (Call call : calls) {
+                if (!call.isCanceled()) {
+                    Log.d(TAG, "cancelCalls: cancel");
+                    call.cancel();
+                }
+            }
+            calls.clear();
+        }
+    }
+
+    public static CopyOnWriteArrayList<Call> getCallList(Object tag) {
         if (null != tag) {
             Iterator iterator = callConcurrentHashMap.entrySet().iterator();
             while (iterator.hasNext()) {
-                Map.Entry<WeakReference<Object>, ArrayList<Call>> entry = (Map.Entry<WeakReference<Object>, ArrayList<Call>>) iterator.next();
+                Map.Entry<WeakReference<Object>, CopyOnWriteArrayList<Call>> entry = (Map.Entry<WeakReference<Object>, CopyOnWriteArrayList<Call>>) iterator.next();
                 WeakReference<Object> weakReference = entry.getKey();
-                if (null != weakReference.get() && tag == weakReference.get()) {
+                if (null == weakReference.get()) {
+                    cancelCalls(entry.getValue());
+                    callConcurrentHashMap.remove(weakReference);
+                } else if (tag == weakReference.get()) {
                     return entry.getValue();
                 }
             }
@@ -103,15 +136,17 @@ public class OkHttpWork {
                 .url(url)
                 .post(formBody)
                 .build();
+        Response response = null;
+        Call call = client.newCall(request);
         try {
-            Response response = null;
-            Call call = client.newCall(request);
             addHttpWorkTag(tag, call);
             response = call.execute();
             response.networkResponse();
             return response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            cancelCall(tag, call);
         }
         return null;
     }
@@ -145,7 +180,7 @@ public class OkHttpWork {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                progressListener.onFailure(call,e);
+                progressListener.onFailure(call, e);
             }
 
             @Override

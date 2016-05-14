@@ -49,7 +49,7 @@ public class AndroidSchedulers {
      *
      * @return
      */
-    public static Scheduler workThread() {
+    public static Scheduler ioThread() {
         return WorkThreadSchedulerHolder.WORK_THREAD_SCHEDULER;
     }
 }
