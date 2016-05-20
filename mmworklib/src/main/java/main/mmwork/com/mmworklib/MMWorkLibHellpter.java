@@ -1,6 +1,7 @@
 package main.mmwork.com.mmworklib;
 
 import android.app.Activity;
+import android.content.Context;
 
 import main.mmwork.com.mmworklib.utils.DeviceInfo;
 import main.mmwork.com.mmworklib.utils.DisplayUtil;
@@ -11,8 +12,12 @@ import main.mmwork.com.mmworklib.utils.FileUtils;
  */
 public class MMWorkLibHellpter {
 
-    public static void initImageSdPath(String sdPath) {
-        FileUtils.initImageSdPath(sdPath);
+    /**
+     * @param appContext
+     * @param sdImagePath
+     */
+    public static void init(Context appContext, String sdImagePath) {
+        FileUtils.initImageSdPath(sdImagePath);
     }
 
     /**

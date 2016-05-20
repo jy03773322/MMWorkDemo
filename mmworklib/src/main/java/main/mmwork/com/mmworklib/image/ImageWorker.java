@@ -292,7 +292,7 @@ public class ImageWorker {
             DrawableTypeRequest<String> stringDrawableTypeRequest = Glide.with(context).load(url);
             stringDrawableTypeRequest
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .bitmapTransform(new BlurTransformation(context, 20));
+                    .bitmapTransform(new BlurTransformation(context, 20,4));
             return stringDrawableTypeRequest;
         }
 
