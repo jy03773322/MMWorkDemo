@@ -14,7 +14,7 @@ public abstract class MMLibApplication extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
-        MMWorkLibHellpter.init(sdPath());
+        MMWorkLibHellpter.init(context,sdPath());
     }
 
     public abstract String sdPath();
