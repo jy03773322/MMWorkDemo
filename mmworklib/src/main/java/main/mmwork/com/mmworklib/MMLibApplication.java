@@ -14,8 +14,13 @@ public abstract class MMLibApplication extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
-        MMWorkLibHellpter.init(context,sdPath());
+        MMWorkLibHellpter.getInstance()
+                .setSdCardImagePath(initSDCardImagePath())
+                .setIsSHowLog(initLogTag(),initIsLog());
     }
 
-    public abstract String sdPath();
+    public abstract String initSDCardImagePath();
+
+    public abstract String initLogTag();
+    public abstract boolean initIsLog();
 }

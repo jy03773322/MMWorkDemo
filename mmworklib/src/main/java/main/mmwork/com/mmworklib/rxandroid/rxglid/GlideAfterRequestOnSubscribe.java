@@ -16,15 +16,15 @@ import rx.Subscriber;
  */
 public class GlideAfterRequestOnSubscribe implements Observable.OnSubscribe<GlideBitmapDrawable> {
 
-    final DrawableTypeRequest<String> typeRequest;
+    final DrawableTypeRequest<?> typeRequest;
     final ImageView mView;
 
-    GlideAfterRequestOnSubscribe(DrawableTypeRequest<String> typeRequest) {
+    GlideAfterRequestOnSubscribe(DrawableTypeRequest<?> typeRequest) {
         this.typeRequest = typeRequest;
         this.mView = null;
     }
 
-    GlideAfterRequestOnSubscribe(DrawableTypeRequest<String> typeRequest, ImageView view) {
+    GlideAfterRequestOnSubscribe(DrawableTypeRequest<?> typeRequest, ImageView view) {
         this.typeRequest = typeRequest;
         this.mView = view;
     }

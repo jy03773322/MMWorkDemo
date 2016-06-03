@@ -292,7 +292,7 @@ public class ImageWorker {
             DrawableTypeRequest<String> stringDrawableTypeRequest = Glide.with(context).load(url);
             stringDrawableTypeRequest
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .bitmapTransform(new BlurTransformation(context, 20,4));
+                    .bitmapTransform(new BlurTransformation(context, 20, 4));
             return stringDrawableTypeRequest;
         }
 
@@ -320,6 +320,18 @@ public class ImageWorker {
         }
         return null;
     }
+
+    public static DrawableTypeRequest<Integer> buildFitCenterImageRequest(final Context context, int url) {
+        if (0 != url) {
+            DrawableTypeRequest<Integer> stringDrawableTypeRequest = Glide.with(context).load(url);
+            stringDrawableTypeRequest
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .fitCenter();
+            return stringDrawableTypeRequest;
+        }
+        return null;
+    }
+
 
     public static DrawableTypeRequest<String> buildCenterCropImageRequest(final Context context, String url) {
         if (!TextUtils.isEmpty(url)) {

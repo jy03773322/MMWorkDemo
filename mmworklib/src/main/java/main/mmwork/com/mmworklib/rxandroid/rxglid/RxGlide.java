@@ -12,17 +12,18 @@ import rx.Observable;
  */
 public class RxGlide {
 
-    public static Observable<GlideBitmapDrawable> afterGlideRequestListener(DrawableTypeRequest<String> request) {
+    public static Observable<GlideBitmapDrawable> afterGlideRequestListener(DrawableTypeRequest<?> request) {
         if (null == request) {
             return Observable.empty();
         }
         return Observable.create(new GlideAfterRequestOnSubscribe(request));
     }
 
-    public static Observable<GlideBitmapDrawable> afterGlideRequestListener(DrawableTypeRequest<String> request, ImageView imageView) {
+    public static Observable<GlideBitmapDrawable> afterGlideRequestListener(DrawableTypeRequest<?> request, ImageView imageView) {
         if (null == request) {
             return Observable.empty();
         }
         return Observable.create(new GlideAfterRequestOnSubscribe(request, imageView));
     }
+
 }

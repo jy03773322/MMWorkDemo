@@ -16,6 +16,7 @@ import main.mmwork.com.mmworklib.http.responser.AbstractResponser;
 import main.mmwork.com.mmworklib.http.upload.ProgressHelper;
 import main.mmwork.com.mmworklib.http.upload.UIProgressListener;
 import main.mmwork.com.mmworklib.rxandroid.schedulers.AndroidSchedulers;
+import main.mmwork.com.mmworklib.utils.MMLogger;
 import okhttp3.Call;
 import okhttp3.RequestBody;
 import rx.Observable;
@@ -155,6 +156,7 @@ public class HttpWork {
                 NetWorkRsultEntity cacheEntity = new NetWorkRsultEntity();
                 cacheEntity.resultJsonStr = resultJsonStr;
                 cacheEntity.isCache = false;
+                MMLogger.logv(TAG, "reqNetWork: "+cacheEntity.resultJsonStr);
                 subscriber.onNext(cacheEntity);
             }
         })
@@ -199,6 +201,7 @@ public class HttpWork {
                     cacheEntity = new NetWorkRsultEntity();
                 }
                 cacheEntity.isCache = true;
+                MMLogger.logv(TAG, "reqCache: " + cacheEntity.resultJsonStr);
                 subscriber.onNext(cacheEntity);
             }
         })
