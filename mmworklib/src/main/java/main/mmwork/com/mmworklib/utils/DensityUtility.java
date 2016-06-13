@@ -57,7 +57,7 @@ public class DensityUtility {
             } else if (model.toLowerCase().equals("mx4")) {
                 value = DensityUtility.dip2px(context, 47);
             } else {
-                int sw = DisplayUtil.getScreenWidth(context);
+                int sw = MMDisplayUtils.getScreenWidth();
                 if (sw <= 480) {
                     value = DensityUtility.dip2px(context, 15);
                 } else if (sw == 720) {

@@ -12,21 +12,25 @@ public class MMLogger {
         com.orhanobut.logger.Logger.init(tag);
     }
 
+    public static void setTag(String tag) {
+        com.orhanobut.logger.Logger.init(tag);
+    }
+
     public static void logd(String tag, Object... args) {
         if (isLog) {
-            com.orhanobut.logger.Logger.d(tag, args);
+            com.orhanobut.logger.Logger.d(tag);
         }
     }
 
     public static void logv(String tag, Object... args) {
         if (isLog) {
-            com.orhanobut.logger.Logger.v(tag, args);
+            com.orhanobut.logger.Logger.v(tag);
         }
     }
 
     public static void loge(String tag, Object... args) {
         if (isLog) {
-            com.orhanobut.logger.Logger.e(tag, args);
+            com.orhanobut.logger.Logger.e(tag);
         }
     }
 

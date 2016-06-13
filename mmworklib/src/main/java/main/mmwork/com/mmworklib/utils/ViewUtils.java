@@ -17,13 +17,13 @@ import android.widget.RelativeLayout;
 public class ViewUtils {
 
     public static boolean setViewtLayoutWithHeight(View view, int wpx, int hpx) {
-        float widthflod = (float) DisplayUtil.getScreenWidth() / wpx;
+        float widthflod = (float) MMDisplayUtils.getScreenWidth() / wpx;
         int height = (int) (hpx * widthflod);
         ViewGroup.LayoutParams llp = view.getLayoutParams();
-        if (llp.width == DisplayUtil.getScreenWidth() && llp.height == height) {
+        if (llp.width == MMDisplayUtils.getScreenWidth() && llp.height == height) {
             return true;
         }
-        llp.width = DisplayUtil.getScreenWidth();
+        llp.width = MMDisplayUtils.getScreenWidth();
         llp.height = height;
 //        view.setLayoutParams(llp);
         Log.v("ViewUtils", "setViewtWidth");

@@ -6,29 +6,14 @@ import android.view.WindowManager;
 
 import main.mmwork.com.mmworklib.MMLibApplication;
 
-public class DisplayUtil {
+public class MMDisplayUtils {
 
     private static int mScreenWidth;
     private static int mScreenHeight;
 
-    /**
-     * 全局的一些变量的初始化
-     */
-    public static void init(Activity activity) {
-        WindowManager wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
-        mScreenWidth = wm.getDefaultDisplay().getWidth();
-        mScreenHeight = wm.getDefaultDisplay().getHeight();
-    }
-
     public static int getScreenHeight(Context context) {
         WindowManager wm = ((Activity) context).getWindowManager();
         return wm.getDefaultDisplay().getHeight();
-    }
-
-    @SuppressWarnings("deprecation")
-    public static int getScreenWidth(Context context) {
-        WindowManager wm = ((Activity) context).getWindowManager();
-        return wm.getDefaultDisplay().getWidth();
     }
 
     public static int getScreenWidth() {
@@ -46,7 +31,6 @@ public class DisplayUtil {
         }
         return mScreenHeight;
     }
-
 
 }
 

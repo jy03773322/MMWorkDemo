@@ -3,7 +3,6 @@ package main.mmwork.com.mmworklib;
 import android.app.Activity;
 
 import main.mmwork.com.mmworklib.utils.DeviceInfo;
-import main.mmwork.com.mmworklib.utils.DisplayUtil;
 import main.mmwork.com.mmworklib.utils.FileUtils;
 import main.mmwork.com.mmworklib.utils.MMLogger;
 
@@ -47,7 +46,6 @@ public class MMWorkLibHellpter {
      * @param activity
      */
     public void splashInit(Activity activity) {
-        DisplayUtil.init(activity);
         DeviceInfo.init(activity, activity);//初始化设备信息
     }
 
