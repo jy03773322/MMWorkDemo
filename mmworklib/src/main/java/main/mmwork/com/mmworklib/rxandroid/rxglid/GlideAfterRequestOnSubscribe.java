@@ -7,9 +7,9 @@ import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
-import main.mmwork.com.mmworklib.rxandroid.MainThreadSubscription;
 import rx.Observable;
 import rx.Subscriber;
+import rx.android.MainThreadSubscription;
 
 /**
  * Created by zhai on 16/5/4.

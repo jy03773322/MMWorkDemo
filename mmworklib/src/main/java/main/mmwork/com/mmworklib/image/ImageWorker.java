@@ -19,9 +19,9 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
-import main.mmwork.com.mmworklib.rxandroid.schedulers.AndroidSchedulers;
 import main.mmwork.com.mmworklib.utils.FileUtils;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 

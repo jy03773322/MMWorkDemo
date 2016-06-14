@@ -5,8 +5,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 
-import main.mmwork.com.mmworklib.rxandroid.schedulers.AndroidSchedulers;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by zhai on 16/5/4.
