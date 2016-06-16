@@ -29,7 +29,7 @@ public class EntityUtils {
      * @param resultObject
      * @param <T>
      */
-    public static <T extends Object> void resolveAllFieldsSet(final T object, T resultObject) {
+    public static <T extends IEntity> void resolveAllFieldsSet(final T object, T resultObject) {
         if (null == object || null == resultObject) {
             return;
         }
@@ -98,7 +98,7 @@ public class EntityUtils {
         return getSetMethodArray;
     }
 
-    public static <T extends Object> Object resolveAllFields(Class cls, T object, T resultObject) {
+    public static <T extends IEntity> Object resolveAllFields(Class cls, T object, T resultObject) {
         if (cls != null && !cls.equals(Object.class)) {
             Field[] fields = cls.getDeclaredFields();
             if (fields != null) {
@@ -124,7 +124,7 @@ public class EntityUtils {
         return object;
     }
 
-    public static Object resolveAllFields(Class cls, Object object, Class resultcls, Object resultObject) throws IllegalAccessException {
+    public static Object resolveAllFields(Class<IEntity> cls, IEntity object, Class<IEntity> resultcls, IEntity resultObject) throws IllegalAccessException {
         if (cls != null && !cls.equals(Object.class) && null != resultcls && !resultObject.equals(Object.class)) {
             Field[] fields = cls.getDeclaredFields();
             Field[] resultFields = resultcls.getDeclaredFields();
@@ -158,7 +158,7 @@ public class EntityUtils {
      * @param bean
      * @return Map
      */
-    public static Map<String, Object> getFieldValueMap(Object bean) {
+    public static Map<String, Object> getFieldValueMap(IEntity bean) {
         Class<?> cls = bean.getClass();
         Map<String, Object> valueMap = new HashMap<String, Object>();
         Method[] methods = cls.getDeclaredMethods();

@@ -2,6 +2,7 @@ package main.mmwork.com.mmworklib.http;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import main.mmwork.com.mmworklib.db.DatabaseHelper;
 import main.mmwork.com.mmworklib.db.dao.CacheEntityDao;
@@ -147,6 +148,8 @@ public class HttpWork {
                             body = ProgressHelper.addProgressRequestListener(body, uiProgressRequestListener);
                         }
                     }
+                    Log.d(TAG, "call: body"+body.toString());
+
                     resultJsonStr = OkHttpWork.post(tag, builder.getUrl(), body);
                 } else {
                     //get
@@ -156,7 +159,7 @@ public class HttpWork {
                 NetWorkRsultEntity cacheEntity = new NetWorkRsultEntity();
                 cacheEntity.resultJsonStr = resultJsonStr;
                 cacheEntity.isCache = false;
-                MMLogger.logv(TAG, "reqNetWork: "+cacheEntity.resultJsonStr);
+                Log.d(TAG, "reqNetWork: "+cacheEntity.resultJsonStr);
                 subscriber.onNext(cacheEntity);
             }
         })
