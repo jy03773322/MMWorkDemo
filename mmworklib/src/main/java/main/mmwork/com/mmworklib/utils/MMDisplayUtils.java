@@ -1,6 +1,5 @@
 package main.mmwork.com.mmworklib.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.WindowManager;
 
@@ -14,11 +13,6 @@ public class MMDisplayUtils {
     private static int mScreenHeight;
 
     public static int contentTop;//状态栏高
-
-    public static int getScreenHeight(Context context) {
-        WindowManager wm = ((Activity) context).getWindowManager();
-        return wm.getDefaultDisplay().getHeight();
-    }
 
     public static int getScreenWidth() {
         if (0 == mScreenWidth) {
@@ -36,14 +30,14 @@ public class MMDisplayUtils {
         return mScreenHeight;
     }
 
-    public static int contentTop(Activity activity) {
+    public static int contentTop() {
         if (0 == contentTop) {
             try {
                 Class c = Class.forName("com.android.internal.R$dimen");
                 Object obj = c.newInstance();
                 Field field = c.getField("status_bar_height");
                 int x = Integer.parseInt(field.get(obj).toString());
-                contentTop = activity.getResources().getDimensionPixelSize(x);
+                contentTop = Global.getContext().getResources().getDimensionPixelSize(x);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {

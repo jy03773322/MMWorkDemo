@@ -6,7 +6,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 
 /**
- * Created by 黄笠 on 2016/1/22.
+ * Created by Zhai on 2016/1/22.
  */
 public class Global {
 
@@ -16,6 +16,8 @@ public class Global {
     private static Looper mLooper;
     private static Handler mWorkHandler;
     private static Handler uiHandler;
+    //判断是否在前台
+    public static boolean isPageFont;
     //application上下文
     public static Context mContext;
 
