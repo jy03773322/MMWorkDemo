@@ -17,7 +17,7 @@ public class BindingRecyclerViewAdapters {
     @SuppressWarnings("unchecked")
     @BindingAdapter({"itemView", "items"})
     public static <T> void setAdapter(RecyclerView recyclerView, ItemViewArg<T> arg, List<T> items) {
-        if (null == items || items.isEmpty()) return;
+        if (null == items ) return;
         setAdapter(recyclerView, arg, items, BindingRecyclerViewAdapterFactory.DEFAULT, null);
     }
 
