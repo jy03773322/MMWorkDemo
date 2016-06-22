@@ -6,7 +6,6 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.MirroredTypeException;
 
-import main.mmwork.com.mmworklib.annotation.SDCardRootFile;
 
 /**
  * Created by yeungeek on 2016/4/27.

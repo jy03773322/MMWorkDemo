@@ -1,13 +1,13 @@
 package com.mm.processor.sdcardProcessor;
 
 import com.google.auto.service.AutoService;
+import com.mm.processor.utils.StringUtils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import com.mm.processor.utils.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +27,7 @@ import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic;
 
 import main.mmwork.com.mmworklib.annotation.SDCardRootFile;
+
 
 /**
  * Created by zhai on 16/6/21.
