@@ -1,0 +1,62 @@
+apply plugin: 'java'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+// 根节点添加
+version = "0.2.0"
+def siteUrl = 'https://github.com/jy03773322/MM WorkDemo'    // project homepage
+def gitUrl = 'https://github.com/jy03773322/MMWorkDemo.git' // project git
+group = "com.mmwork"
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+// 根节点添加
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                name 'android lib'
+                url siteUrl
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'jy03773322'
+                        name 'ZhaiXiaomeng'
+                        email 'jy03773322@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = "mmannotaion"                // project name in jcenter
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
