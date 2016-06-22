@@ -1,1 +1,1 @@
-include ':app', ':mmworklib', ':compiler'
+include ':app', ':mmworklib'
