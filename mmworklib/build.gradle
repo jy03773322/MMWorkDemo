@@ -3,7 +3,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 // 根节点添加
-version = "0.4.0.2"
+version = "0.4.0.3"
 def siteUrl = 'https://github.com/jy03773322/MMWorkDemo'    // project homepage
 def gitUrl = 'https://github.com/jy03773322/MMWorkDemo.git' // project git
 group = "com.mmwork"
@@ -51,6 +51,7 @@ allprojects {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.mmwork:annotaion:0.2.0'
     compile 'io.reactivex:rxandroid:1.2.0'
     compile 'io.reactivex:rxjava:1.1.5'
     compile 'com.squareup.okhttp3:okhttp:3.1.2'
