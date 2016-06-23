@@ -2,8 +2,11 @@ apply plugin: 'java'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 // 根节点添加
-version = "0.2.0"
+version = "0.2.1"
 def siteUrl = 'https://github.com/jy03773322/MM WorkDemo'    // project homepage
 def gitUrl = 'https://github.com/jy03773322/MMWorkDemo.git' // project git
 group = "com.mmwork"
@@ -19,7 +22,7 @@ install {
         // This generates POM.xml with proper parameters
         pom {
             project {
-                packaging 'aar'
+                packaging 'jar'
                 name 'android lib'
                 url siteUrl
                 licenses {

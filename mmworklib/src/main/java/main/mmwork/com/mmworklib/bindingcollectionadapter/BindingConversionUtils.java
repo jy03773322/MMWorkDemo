@@ -5,7 +5,7 @@ import android.databinding.BindingConversion;
 import android.databinding.ObservableInt;
 import android.graphics.drawable.Drawable;
 
-import main.mmwork.com.mmworklib.MMLibApplication;
+import main.mmwork.com.mmworklib.utils.Global;
 
 
 /**
@@ -16,7 +16,7 @@ public class BindingConversionUtils {
     @BindingConversion
     public static Drawable convertDrawableToDrawable(int drawableId) {
         if (drawableId > 0) {
-            return MMLibApplication.context.getResources().getDrawable(drawableId);
+            return Global.getContext().getResources().getDrawable(drawableId);
         }
         return null;
     }
@@ -24,7 +24,7 @@ public class BindingConversionUtils {
     @BindingConversion
     public static ColorStateList convertColorIdToColorStateList(int colorId) {
         if (colorId > 0) {
-            return MMLibApplication.context.getResources().getColorStateList(colorId);
+            return Global.getContext().getResources().getColorStateList(colorId);
         }
         return null;
     }

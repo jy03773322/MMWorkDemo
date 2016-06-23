@@ -5,8 +5,6 @@ import android.view.WindowManager;
 
 import java.lang.reflect.Field;
 
-import main.mmwork.com.mmworklib.MMLibApplication;
-
 public class MMDisplayUtils {
 
     private static int mScreenWidth;
@@ -16,7 +14,7 @@ public class MMDisplayUtils {
 
     public static int getScreenWidth() {
         if (0 == mScreenWidth) {
-            WindowManager wm = (WindowManager) MMLibApplication.context.getSystemService(Context.WINDOW_SERVICE);
+            WindowManager wm = (WindowManager) Global.getContext().getSystemService(Context.WINDOW_SERVICE);
             mScreenWidth = wm.getDefaultDisplay().getWidth();
         }
         return mScreenWidth;
@@ -24,7 +22,7 @@ public class MMDisplayUtils {
 
     public static int getScreenHeight() {
         if (0 == mScreenHeight) {
-            WindowManager wm = (WindowManager) MMLibApplication.context.getSystemService(Context.WINDOW_SERVICE);
+            WindowManager wm = (WindowManager) Global.getContext().getSystemService(Context.WINDOW_SERVICE);
             mScreenHeight = wm.getDefaultDisplay().getHeight();
         }
         return mScreenHeight;
