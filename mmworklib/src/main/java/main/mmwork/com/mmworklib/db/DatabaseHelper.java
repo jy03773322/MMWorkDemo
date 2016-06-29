@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.Map;
 
 /**
- * Created by 黄笠 on 2015/11/27.
+ * Created by Zhai on 2015/11/27.
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
@@ -91,8 +91,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             for (Map.Entry<Class<?>, TableInfo> entry : mMap.entrySet()) {
                 Class<?> clazz = entry.getKey();
                 TableInfo tbInfo = entry.getValue();
-                TableUtils.dropTable(connectionSource, clazz, true);
-                TableUtils.createTable(connectionSource, clazz);
+                TableUtils.dropTable(getConnectionSource(), clazz, true);
+                TableUtils.createTable(getConnectionSource(), clazz);
                 //save table version
                 mSharePre.saveTBVer(tbInfo.tbName, tbInfo.tbVer);
             }

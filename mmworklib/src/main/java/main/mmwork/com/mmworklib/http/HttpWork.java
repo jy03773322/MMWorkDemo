@@ -225,6 +225,7 @@ public class HttpWork {
      */
     public void clearCache() {
         DatabaseHelper.getInstance(context).clearDb();
+        DatabaseHelper.getInstance(context).clearDb();
     }
 
     /**

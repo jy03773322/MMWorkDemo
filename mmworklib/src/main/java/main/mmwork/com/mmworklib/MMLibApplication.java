@@ -9,12 +9,6 @@ import main.mmwork.com.mmworklib.utils.Global;
  */
 public abstract class MMLibApplication extends Application {
 
-    private static MMLibApplication sApplication;
-
-    public static MMLibApplication getInstance() {
-        return sApplication;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
