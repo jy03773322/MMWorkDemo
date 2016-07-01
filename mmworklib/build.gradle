@@ -1,9 +1,12 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.neenbedankt.android-apt'
+
+def dbflow_version = "3.0.1"
 
 // 根节点添加
-version = "0.4.2.0"
+version = "0.5.0_dbflow"
 def siteUrl = 'https://github.com/jy03773322/MMWorkDemo'    // project homepage
 def gitUrl = 'https://github.com/jy03773322/MMWorkDemo.git' // project git
 group = "com.mmwork"
@@ -66,6 +69,18 @@ dependencies {
     compile 'com.android.support:animated-vector-drawable:23.3.0'
     compile files('libs/ormlite-android-4.48.jar')
     compile files('libs/ormlite-core-4.48.jar')
+
+    //DBFlow
+    apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
+    // use kapt for kotlin apt
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
+    compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
+
+    // sql-cipher database encyrption (optional)
+    compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${dbflow_version}"
+
+    // kotlin extensions
+    compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${dbflow_version}"
 }
 
 // 根节点添加
