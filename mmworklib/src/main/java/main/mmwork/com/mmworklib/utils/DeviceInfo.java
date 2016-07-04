@@ -86,7 +86,7 @@ public class DeviceInfo {
     }
 
     public static String getOsVersion() {
-        String sdkStr = "";
+        String sdkStr = Build.VERSION.SDK_INT+"";
         switch (Build.VERSION.SDK_INT) {
             case Build.VERSION_CODES.BASE:
                 sdkStr = "October 2008: The original, first, version of Android.";
@@ -146,6 +146,15 @@ public class DeviceInfo {
                 break;
             case Build.VERSION_CODES.KITKAT:
                 sdkStr = "Android 4.4";
+                break;
+            case Build.VERSION_CODES.LOLLIPOP:
+                sdkStr = "Android LOLLIPOP";
+                break;
+            case Build.VERSION_CODES.LOLLIPOP_MR1:
+                sdkStr = "Android LOLLIPOP_MR1";
+                break;
+            case Build.VERSION_CODES.M:
+                sdkStr = "Android M";
                 break;
             default:
                 break;
