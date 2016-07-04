@@ -24,11 +24,13 @@ public class DeviceInfo {
     private static String sVersionName;
     private static int sVersionCode;
 
+    public static Context sContext;
 
     public static void init(Context context, Activity activity) {
         // String myIMSI = android.os.SystemProperties.get(android.telephony.TelephonyProperties.PROPERTY_IMSI);
         // String myIMEI = android.os.SystemProperties.get(android.telephony.TelephonyProperties.PROPERTY_IMEI);
         // String Imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
+        sContext = context;
         MACADDRESS = getLocalMacAddress(context);
         RESOLUTION = getResolution(activity);
     }
@@ -82,11 +84,11 @@ public class DeviceInfo {
     }
 
     public static String getUuid() {
-        return Build.SERIAL;
+        return new DeviceUuidFactory(sContext).getDeviceUuid();
     }
 
     public static String getOsVersion() {
-        String sdkStr = Build.VERSION.SDK_INT+"";
+        String sdkStr = Build.VERSION.SDK_INT + "";
         switch (Build.VERSION.SDK_INT) {
             case Build.VERSION_CODES.BASE:
                 sdkStr = "October 2008: The original, first, version of Android.";

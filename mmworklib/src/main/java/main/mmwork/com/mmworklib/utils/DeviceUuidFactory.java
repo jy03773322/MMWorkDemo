@@ -17,6 +17,8 @@ public class DeviceUuidFactory {
     protected static final String PREFS_DEVICE_ID = "device_id";
     protected static volatile UUID uuid;
 
+    protected static volatile String uuId;//唯一ID
+
     public DeviceUuidFactory(Context context) {
         if (uuid == null) {
             synchronized (DeviceUuidFactory.class) {
@@ -25,8 +27,9 @@ public class DeviceUuidFactory {
                             .getSharedPreferences(PREFS_FILE, 0);
                     final String id = prefs.getString(PREFS_DEVICE_ID, null);
                     if (id != null) {
-                        // Use the ids previously computed and stored in the
+                        // Use the ids previously computed and stored in thÎe
                         // prefs file
+                        uuId = id;
                         uuid = UUID.fromString(id);
                     } else {
                         final String androidId = Settings.Secure.getString(
@@ -52,8 +55,9 @@ public class DeviceUuidFactory {
                             throw new RuntimeException(e);
                         }
                         // Write the value out to the prefs file
+                        uuId = uuid.toString();
                         prefs.edit()
-                                .putString(PREFS_DEVICE_ID, uuid.toString())
+                                .putString(PREFS_DEVICE_ID, uuId)
                                 .commit();
                     }
                 }
@@ -89,7 +93,11 @@ public class DeviceUuidFactory {
      * purposes.
      * @see http://code.google.com/p/android/issues/detail?id=10603
      */
-    public UUID getDeviceUuid() {
+    public UUID getDeviceUuidObjects() {
         return uuid;
+    }
+
+    public String getDeviceUuid(){
+        return uuId;
     }
 }
