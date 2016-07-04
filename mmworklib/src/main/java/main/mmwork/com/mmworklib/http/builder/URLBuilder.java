@@ -39,6 +39,8 @@ public interface URLBuilder {
 
         public String[] encrypt() default "";
 
+        public String[] cacheIgoneParam() default "";
+
         public Class<? extends URLBuilder> builder() default DefaultURLBuilder.class;
     }
 }

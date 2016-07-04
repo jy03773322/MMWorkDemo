@@ -30,6 +30,8 @@ public class OkHttpWork {
     private static final String TAG = "OkHttpWork";
 
     private final static int TIME_OUT_MILLISECONDS = 5 * 1000;
+    private final static int READ_TIME_OUT_MILLISECONDS = 30 * 1000;
+    private final static int WRITE_TIME_OUT_MILLISECONDS = 30 * 1000;
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 //    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -40,8 +42,8 @@ public class OkHttpWork {
     static {
         client = new OkHttpClient.Builder()
                 .connectTimeout(TIME_OUT_MILLISECONDS, TimeUnit.MILLISECONDS)
-                .readTimeout(TIME_OUT_MILLISECONDS, TimeUnit.MILLISECONDS)
-                .writeTimeout(TIME_OUT_MILLISECONDS, TimeUnit.MILLISECONDS)
+                .readTimeout(READ_TIME_OUT_MILLISECONDS, TimeUnit.MILLISECONDS)
+                .writeTimeout(WRITE_TIME_OUT_MILLISECONDS, TimeUnit.MILLISECONDS)
                 .build();
     }
 
