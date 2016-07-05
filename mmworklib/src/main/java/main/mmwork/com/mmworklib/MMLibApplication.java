@@ -17,6 +17,7 @@ public abstract class MMLibApplication extends Application {
             @Override
             public void run() {
                 MMWorkLibHellpter.getInstance()
+                        .initDeviceInfo(Global.getContext())
                         .setSdCardImagePath(initSDCardImagePath())
                         .setIsSHowLog(initLogTag(), initIsLog());
             }

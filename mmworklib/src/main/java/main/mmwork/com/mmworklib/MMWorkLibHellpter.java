@@ -1,10 +1,9 @@
 package main.mmwork.com.mmworklib;
 
-import android.app.Activity;
+import android.content.Context;
 
 import main.mmwork.com.mmworklib.utils.DeviceInfo;
 import main.mmwork.com.mmworklib.utils.FileUtils;
-import main.mmwork.com.mmworklib.utils.Global;
 import main.mmwork.com.mmworklib.utils.MMLogger;
 
 /**
@@ -37,17 +36,19 @@ public class MMWorkLibHellpter {
         return this;
     }
 
-    public void setIsSHowLog(String tag, boolean isSHowLog) {
+    public MMWorkLibHellpter setIsSHowLog(String tag, boolean isSHowLog) {
         MMLogger.init(tag, isSHowLog);
+        return this;
     }
 
     /**
      * 在闪屏幕中的初始化
      *
-     * @param activity
+     * @param context
      */
-    public void splashInit(Activity activity) {
-        DeviceInfo.init(Global.getContext(), activity);//初始化设备信息
+    public MMWorkLibHellpter initDeviceInfo(Context context) {
+        DeviceInfo.init(context);//初始化设备信息
+        return this;
     }
 
 }

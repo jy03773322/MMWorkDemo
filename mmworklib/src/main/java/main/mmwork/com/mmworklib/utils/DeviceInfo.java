@@ -1,6 +1,5 @@
 package main.mmwork.com.mmworklib.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -9,6 +8,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 public class DeviceInfo {
 
@@ -24,12 +24,12 @@ public class DeviceInfo {
     private static String sVersionName;
     private static int sVersionCode;
 
-    public static Context sContext;
+    private static Context sContext;
 
-    public static void init(Context context, Activity activity) {
+    public static void init(Context context) {
         sContext = context;
         MACADDRESS = getLocalMacAddress(context);
-        RESOLUTION = getResolution(activity);
+        RESOLUTION = getResolution(context);
     }
 
     public static String getModelAndFactor() {
@@ -190,12 +190,18 @@ public class DeviceInfo {
     /**
      * 获取屏幕信息
      *
-     * @param activity
+     * @param context
      * @return
      */
-    private static String getResolution(Activity activity) {
-        DisplayMetrics dm = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
-        return String.valueOf(dm.widthPixels) + "*" + String.valueOf(dm.heightPixels);
+    private static String getResolution(Context context) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager windowManager = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(metrics);
+        return String.valueOf(metrics.widthPixels) + "*" + String.valueOf(metrics.heightPixels);
+
+//        DisplayMetrics dm = new DisplayMetrics();
+//        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+//        return String.valueOf(dm.widthPixels) + "*" + String.valueOf(dm.heightPixels);
     }
 }
