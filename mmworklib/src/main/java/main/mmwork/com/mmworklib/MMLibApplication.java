@@ -1,6 +1,7 @@
 package main.mmwork.com.mmworklib;
 
 import android.app.Application;
+import android.content.Context;
 
 import main.mmwork.com.mmworklib.utils.Global;
 
@@ -10,9 +11,14 @@ import main.mmwork.com.mmworklib.utils.Global;
 public abstract class MMLibApplication extends Application {
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        Global.setContext(getApplicationContext());
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
-        Global.setContext(getApplicationContext());
         Global.post2work(new Runnable() {
             @Override
             public void run() {
