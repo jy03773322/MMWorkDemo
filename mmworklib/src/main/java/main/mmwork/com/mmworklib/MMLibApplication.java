@@ -13,17 +13,18 @@ public abstract class MMLibApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        Global.setContext(getApplicationContext());
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Global.setContext(getApplicationContext());
+        MMWorkLibHellpter.getInstance()
+                .initDeviceInfo(Global.getContext());
         Global.post2work(new Runnable() {
             @Override
             public void run() {
                 MMWorkLibHellpter.getInstance()
-                        .initDeviceInfo(Global.getContext())
                         .setSdCardImagePath(initSDCardImagePath())
                         .setIsSHowLog(initLogTag(), initIsLog());
             }

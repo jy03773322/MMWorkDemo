@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * Created by zhai on 16/6/15.
@@ -61,7 +62,7 @@ public class GsonUtils {
         return obj;
     }
 
-    private static class ListParameterizedType implements ParameterizedType {
+    private static class ListParameterizedType implements java.lang.reflect.ParameterizedType {
 
         private Type type;
 
@@ -87,5 +88,30 @@ public class GsonUtils {
         // implement equals method too! (as per javadoc)
     }
 
+    private static class VectorParameterizedType implements ParameterizedType {
+
+        private Type type;
+
+        private VectorParameterizedType(Type type) {
+            this.type = type;
+        }
+
+        @Override
+        public Type[] getActualTypeArguments() {
+            return new Type[]{type};
+        }
+
+        @Override
+        public Type getRawType() {
+            return Vector.class;
+        }
+
+        @Override
+        public Type getOwnerType() {
+            return null;
+        }
+
+        // implement equals method too! (as per javadoc)
+    }
 
 }
