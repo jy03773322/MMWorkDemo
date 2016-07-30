@@ -47,6 +47,12 @@ public class GsonUtils {
         return resultList;
     }
 
+    public static <T extends IEntity> Vector<T> fromJsonVector(String jsonData, Class<T> tClass) {
+        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeSerializer()).setDateFormat(DateFormat.LONG).create();
+        Vector<T> resultList = gson.fromJson(jsonData, new VectorParameterizedType(tClass));
+        return resultList;
+    }
+
 
     public static <T> T fromJson(byte[] jsonBytes, Type type) {
         T obj = null;
