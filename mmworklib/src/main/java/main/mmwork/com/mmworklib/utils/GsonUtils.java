@@ -1,5 +1,7 @@
 package main.mmwork.com.mmworklib.utils;
 
+import android.databinding.ObservableInt;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -17,38 +19,60 @@ import java.util.Vector;
  */
 public class GsonUtils {
 
-    public static String toJsonString(IEntity clazz,Type typeOfSrc) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateSerializer()).setDateFormat(DateFormat.LONG).create();
-        String Str = gson.toJson(clazz,typeOfSrc);
+    public static String toJsonString(IEntity clazz, Type typeOfSrc) {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Date.class, new DateSerializer())
+                .setDateFormat(DateFormat.LONG)
+                .create();
+        String Str = gson.toJson(clazz, typeOfSrc);
         return Str;
     }
 
     public static String toJsonString(IEntity clazz) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateSerializer()).setDateFormat(DateFormat.LONG).create();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Date.class, new DateSerializer())
+                .setDateFormat(DateFormat.LONG)
+                .create();
         String Str = gson.toJson(clazz);
         return Str;
     }
 
     public static <T extends IEntity> T fromJson(String jsonData, Class<T> tClass) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeSerializer()).setDateFormat(DateFormat.LONG).create();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Date.class, new DateDeSerializer())
+                .registerTypeAdapter(ObservableInt.class, new ObservableDeIntSerializer())
+                .setDateFormat(DateFormat.LONG)
+                .create();
         T user = gson.fromJson(jsonData, tClass);
         return user;
     }
 
     public static <T extends IEntity> T fromJson(String jsonData, Type type) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeSerializer()).setDateFormat(DateFormat.LONG).create();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Date.class, new DateDeSerializer())
+                .registerTypeAdapter(ObservableInt.class, new ObservableDeIntSerializer())
+                .setDateFormat(DateFormat.LONG)
+                .create();
         T user = gson.fromJson(jsonData, type);
         return user;
     }
 
     public static <T extends IEntity> List<T> fromJsonArray(String jsonData, Class<T> tClass) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeSerializer()).setDateFormat(DateFormat.LONG).create();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Date.class, new DateDeSerializer())
+                .registerTypeAdapter(ObservableInt.class, new ObservableDeIntSerializer())
+                .setDateFormat(DateFormat.LONG)
+                .create();
         List<T> resultList = gson.fromJson(jsonData, new ListParameterizedType(tClass));
         return resultList;
     }
 
     public static <T extends IEntity> Vector<T> fromJsonVector(String jsonData, Class<T> tClass) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeSerializer()).setDateFormat(DateFormat.LONG).create();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Date.class, new DateDeSerializer())
+                .registerTypeAdapter(ObservableInt.class, new ObservableDeIntSerializer())
+                .setDateFormat(DateFormat.LONG)
+                .create();
         Vector<T> resultList = gson.fromJson(jsonData, new VectorParameterizedType(tClass));
         return resultList;
     }
@@ -57,7 +81,11 @@ public class GsonUtils {
     public static <T> T fromJson(byte[] jsonBytes, Type type) {
         T obj = null;
         if (jsonBytes != null) {
-            Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeSerializer()).setDateFormat(DateFormat.LONG).create();
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Date.class, new DateDeSerializer())
+                    .registerTypeAdapter(ObservableInt.class, new ObservableDeIntSerializer())
+                    .setDateFormat(DateFormat.LONG)
+                    .create();
             String jsonStr = new String(jsonBytes);
             try {
                 obj = gson.fromJson(jsonStr, type);

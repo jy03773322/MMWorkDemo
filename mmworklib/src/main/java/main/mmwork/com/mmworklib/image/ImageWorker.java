@@ -10,6 +10,7 @@ import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -188,7 +189,8 @@ public class ImageWorker {
     }
 
     public static void imageLoaderCircle(final Context context, ImageView view, String url) {
-        if (!TextUtils.isEmpty(url)) {
+
+        if (!TextUtils.isEmpty(url) && !isDestroyed(context)) {
             Glide.with(context)
                     .load(url)
                     .centerCrop()
@@ -242,7 +244,7 @@ public class ImageWorker {
      */
 
     public static void imageLoaderRoundCorner(final Context context, String url, final SimpleTarget<GlideDrawable> simpleTarget, final float pixels) {
-        if (!TextUtils.isEmpty(url)) {
+        if (!TextUtils.isEmpty(url) && !isDestroyed(context)) {
             Glide.with(context)
                     .load(url)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -292,7 +294,7 @@ public class ImageWorker {
             DrawableTypeRequest<String> stringDrawableTypeRequest = Glide.with(context).load(url);
             stringDrawableTypeRequest
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .bitmapTransform(new BlurTransformation(context, 20, 4));
+                    .bitmapTransform(new BlurTransformation(context, 20, 6));
             return stringDrawableTypeRequest;
         }
 
@@ -304,6 +306,17 @@ public class ImageWorker {
             DrawableTypeRequest<String> stringDrawableTypeRequest = Glide.with(context).load(url);
             stringDrawableTypeRequest
                     .bitmapTransform(new RoundedCornersTransformation(context, radius, 0))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+            return stringDrawableTypeRequest;
+        }
+        return null;
+    }
+
+    public static DrawableTypeRequest<String> buildImageRequest(final Context context, String url, Transformation<Bitmap>... bitmapTransformations) {
+        if (!TextUtils.isEmpty(url)) {
+            DrawableTypeRequest<String> stringDrawableTypeRequest = Glide.with(context).load(url);
+            stringDrawableTypeRequest
+                    .bitmapTransform(bitmapTransformations)
                     .diskCacheStrategy(DiskCacheStrategy.ALL);
             return stringDrawableTypeRequest;
         }
@@ -342,6 +355,15 @@ public class ImageWorker {
             return stringDrawableTypeRequest;
         }
         return null;
+    }
+
+    private static boolean isDestroyed(Context context) {
+        if (context instanceof Activity) {
+            if (((Activity) context).isDestroyed()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

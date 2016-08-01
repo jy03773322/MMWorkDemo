@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 public @interface SDCardRootFile {
 
-    //子文件名
+    //filenames
     String[] fileNames() default {};
 
 }

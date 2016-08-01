@@ -6,7 +6,7 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 // 根节点添加
-version = "0.3.0"
+version = "0.3.2"
 def siteUrl = 'https://github.com/jy03773322/MM WorkDemo'    // project homepage
 def gitUrl = 'https://github.com/jy03773322/MMWorkDemo.git' // project git
 group = "com.mmwork"

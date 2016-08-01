@@ -17,7 +17,7 @@ public class Global {
     private static Handler mWorkHandler;
     private static Handler uiHandler;
     //判断是否在前台
-    public static boolean isPageFont;
+    private static boolean isPageFont;
     //application上下文
     private static Context mContext;
 
@@ -84,5 +84,11 @@ public class Global {
         mWorkHandler.removeCallbacksAndMessages(null);
     }
 
+    public static boolean isPageFont() {
+        return isPageFont;
+    }
 
+    public static void setIsPageFont(boolean isPageFont) {
+        Global.isPageFont = isPageFont;
+    }
 }

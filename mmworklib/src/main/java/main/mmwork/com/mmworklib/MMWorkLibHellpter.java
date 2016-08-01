@@ -11,6 +11,7 @@ import main.mmwork.com.mmworklib.utils.MMLogger;
  */
 public class MMWorkLibHellpter {
 
+
     private volatile static MMWorkLibHellpter mInstance;
 
     public static MMWorkLibHellpter getInstance() {
@@ -50,5 +51,6 @@ public class MMWorkLibHellpter {
         DeviceInfo.init(context);//初始化设备信息
         return this;
     }
+
 
 }
