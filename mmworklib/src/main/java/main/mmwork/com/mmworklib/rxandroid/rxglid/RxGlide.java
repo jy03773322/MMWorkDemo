@@ -29,4 +29,18 @@ public class RxGlide {
                 .subscribeOn(AndroidSchedulers.mainThread());
     }
 
+    public static Observable<GlideBitmapDrawable> afterGlideThumnailRequestListener(DrawableTypeRequest<?> request, DrawableTypeRequest<?> thumbnailRequest, ImageView imageView) {
+        if (null == request) {
+            return Observable.empty();
+        }
+        Observable<GlideBitmapDrawable> glideBitmapDrawableObservable = Observable.create(new GlideThumnailAfterRequestOnSubscribe(thumbnailRequest))
+                .subscribeOn(AndroidSchedulers.mainThread());
+
+        request
+                .thumbnail(thumbnailRequest)
+                .into(imageView);
+        return glideBitmapDrawableObservable;
+    }
+
+
 }

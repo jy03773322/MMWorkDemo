@@ -7,6 +7,7 @@ import com.bumptech.glide.util.ContentLengthInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 import okhttp3.Call;
@@ -41,10 +42,14 @@ public class OkHttpStreamFetcher implements DataFetcher<InputStream> {
 
         Response response;
         call = client.newCall(request);
-        response = call.execute();
+        try {
+            response = call.execute();
+        } catch (UnknownHostException e) {
+            throw new UnknownHostException(e + "/" + url.toStringUrl());
+        }
         responseBody = response.body();
         if (!response.isSuccessful()) {
-            throw new IOException("Request failed with code: " + response.code());
+            throw new IOException("Request failed with  url:" + url.toStringUrl()+",code:" + response.code());
         }
 
         long contentLength = responseBody.contentLength();

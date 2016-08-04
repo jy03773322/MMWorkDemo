@@ -44,13 +44,22 @@ public class ImageWorker {
                 .into(view);
     }
 
+    /**
+     * 必须将Listener设置给Thumbnail的Builder，如果设置给主Builder，会造成大图图能正确替换
+     *
+     * @param context
+     * @param view
+     * @param thumnailUrl
+     * @param url
+     * @param listener
+     */
     public static void imageLoaderFitCenter(Context context, ImageView view, String thumnailUrl, String url, RequestListener listener) {
         DrawableRequestBuilder thumbNailRequest = Glide.with(context)
                 .load(thumnailUrl)
+                .listener(listener)
                 .diskCacheStrategy(DiskCacheStrategy.ALL);
         Glide.with(context).load(url)
                 .fitCenter()
-                .listener(listener)
                 .thumbnail(thumbNailRequest)
                 .dontAnimate()
                 .into(view);
@@ -350,22 +359,21 @@ public class ImageWorker {
         return null;
     }
 
-    public static DrawableTypeRequest<String> buildThumnaiFlitCenterImageRequest(final Context context, String thumnailUrl, String url, ImageView imageView) {
+    /**
+     * 生成缩略图请求
+     * @param context
+     * @param thumnailUrl
+     * @return
+     */
+    public static DrawableTypeRequest<String> buildThumnaiRequest(final Context context, String thumnailUrl) {
         try {
-            if (!TextUtils.isEmpty(url)) {
-                DrawableRequestBuilder<String> thumnailBuilder = Glide.with(context)
-                        .load(thumnailUrl)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL);
-
-                DrawableTypeRequest<String> stringDrawableTypeRequest = Glide.with(context).load(url);
-                stringDrawableTypeRequest
-                        .thumbnail(thumnailBuilder)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .fitCenter();
-                return stringDrawableTypeRequest;
+            if (!TextUtils.isEmpty(thumnailUrl)) {
+                DrawableTypeRequest<String> load = Glide.with(context).load(thumnailUrl);
+                load.diskCacheStrategy(DiskCacheStrategy.ALL);
+                return load;
             }
         } catch (Exception e) {
-            Log.e(TAG, "buildThumnaiFlitCenterImageRequest: " + e.getMessage() + "/url=" + url);
+            Log.e(TAG, "buildThumnaiFlitCenterImageRequest: " + e.getMessage() + "/url=" + thumnailUrl);
         }
         return null;
     }
