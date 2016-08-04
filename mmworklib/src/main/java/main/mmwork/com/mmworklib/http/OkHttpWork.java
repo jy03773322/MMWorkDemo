@@ -35,7 +35,6 @@ public class OkHttpWork {
     private final static int WRITE_TIME_OUT_MILLISECONDS = 20 * 1000;
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-//    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     public static OkHttpClient client;
     private static ConcurrentHashMap<WeakReference<Object>, CopyOnWriteArrayList<Call>> callConcurrentHashMap = new ConcurrentHashMap<>();
@@ -212,7 +211,6 @@ public class OkHttpWork {
         });
         return call;
     }
-
 
     public static void addIter(OkHttpClient cloneClient, final ProgressListener progressListener) {
         //添加拦截器，自定义ResponseBody，添加下载进度

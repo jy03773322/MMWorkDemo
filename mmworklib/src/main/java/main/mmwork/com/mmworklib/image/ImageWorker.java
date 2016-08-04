@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.DrawableRequestBuilder;
@@ -191,11 +192,15 @@ public class ImageWorker {
     public static void imageLoaderCircle(final Context context, ImageView view, String url) {
 
         if (!TextUtils.isEmpty(url) && !isDestroyed(context)) {
-            Glide.with(context)
-                    .load(url)
-                    .centerCrop()
-                    .bitmapTransform(new CropCircleTransformation(context))
-                    .into(view);
+            try {
+                Glide.with(context)
+                        .load(url)
+                        .centerCrop()
+                        .bitmapTransform(new CropCircleTransformation(context))
+                        .into(view);
+            } catch (IllegalArgumentException e) {
+                Log.e(TAG, "imageLoaderCircle: " + e.getMessage());
+            }
         }
     }
 
@@ -335,6 +340,37 @@ public class ImageWorker {
     }
 
     public static DrawableTypeRequest<Integer> buildFitCenterImageRequest(final Context context, int url) {
+        if (0 != url) {
+            DrawableTypeRequest<Integer> stringDrawableTypeRequest = Glide.with(context).load(url);
+            stringDrawableTypeRequest
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .fitCenter();
+            return stringDrawableTypeRequest;
+        }
+        return null;
+    }
+
+    public static DrawableTypeRequest<String> buildThumnaiFlitCenterImageRequest(final Context context, String thumnailUrl, String url, ImageView imageView) {
+        try {
+            if (!TextUtils.isEmpty(url)) {
+                DrawableRequestBuilder<String> thumnailBuilder = Glide.with(context)
+                        .load(thumnailUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL);
+
+                DrawableTypeRequest<String> stringDrawableTypeRequest = Glide.with(context).load(url);
+                stringDrawableTypeRequest
+                        .thumbnail(thumnailBuilder)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .fitCenter();
+                return stringDrawableTypeRequest;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "buildThumnaiFlitCenterImageRequest: " + e.getMessage() + "/url=" + url);
+        }
+        return null;
+    }
+
+    public static DrawableTypeRequest<Integer> buildThumnaiFitCenterImageRequest(final Context context, int url) {
         if (0 != url) {
             DrawableTypeRequest<Integer> stringDrawableTypeRequest = Glide.with(context).load(url);
             stringDrawableTypeRequest

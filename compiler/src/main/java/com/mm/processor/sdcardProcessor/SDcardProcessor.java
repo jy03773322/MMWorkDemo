@@ -31,7 +31,7 @@ import javax.tools.Diagnostic;
 
 /**
  * Created by zhai on 16/6/21.
- * SDUtils解析类
+ * SDUtils paser
  */
 @AutoService(Processor.class)
 public class SDcardProcessor extends AbstractProcessor {
@@ -78,13 +78,13 @@ public class SDcardProcessor extends AbstractProcessor {
         //SDCardRootFile
 
         for (Element element : roundEnv.getElementsAnnotatedWith(SDCardRootFile.class)) {
-            //判断是否是public Field
+            //if public Field
             if (!com.mm.processor.utils.ProcessorUtil.isFinalValidField(element, messager, ANNOTATION)) {
                 return true;
             }
             VariableElement variableElement = (VariableElement) element;
             try {
-                //解析
+                //paser
                 annotatedClasses.add(buildAnnotVariabldSDcardClass(variableElement));
             } catch (IOException e) {
                 String message = String.format("Couldn't processvariablass %s: .%s", variableElement,

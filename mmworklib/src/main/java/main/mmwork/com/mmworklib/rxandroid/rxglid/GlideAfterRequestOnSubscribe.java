@@ -35,7 +35,7 @@ public class GlideAfterRequestOnSubscribe implements Observable.OnSubscribe<Glid
         final RequestListener requestListener = new RequestListener<Object, GlideBitmapDrawable>() {
             @Override
             public boolean onException(Exception e, Object model, Target<GlideBitmapDrawable> target, boolean isFirstResource) {
-                if (!subscriber.isUnsubscribed()) {
+                if (!subscriber.isUnsubscribed() && isFirstResource) {
                     subscriber.onError(e);
                     if (null != mView) {
                         return false;
@@ -46,7 +46,7 @@ public class GlideAfterRequestOnSubscribe implements Observable.OnSubscribe<Glid
 
             @Override
             public boolean onResourceReady(GlideBitmapDrawable resource, Object model, Target<GlideBitmapDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                if (!subscriber.isUnsubscribed()) {
+                if (!subscriber.isUnsubscribed() && isFirstResource) {
                     subscriber.onNext(resource);
                     if (null != mView) {
                         return false;
@@ -55,6 +55,7 @@ public class GlideAfterRequestOnSubscribe implements Observable.OnSubscribe<Glid
                 return true;
             }
         };
+
         typeRequest.listener(requestListener);
         if (null != mView) {
             typeRequest.into(mView);

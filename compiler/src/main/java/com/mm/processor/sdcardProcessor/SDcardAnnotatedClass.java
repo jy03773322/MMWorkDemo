@@ -15,12 +15,12 @@ import javax.lang.model.type.MirroredTypeException;
 class SDcardAnnotatedClass {
     public final VariableElement typeElement;
 
-    private String qualifiedSuperClassName;//规范命名
-    private String annotatedClassName; //简单命名
-    private String simpleTypeName; //简单命名
+    private String qualifiedSuperClassName;
+    private String annotatedClassName;
+    private String simpleTypeName;
 
-    private String[] fileNames;//属性
-    private String appRootPathName; //路径命名
+    private String[] fileNames;
+    private String appRootPathName;
 
     public SDcardAnnotatedClass(VariableElement typeElement) {
         this.appRootPathName = (String) typeElement.getConstantValue();
