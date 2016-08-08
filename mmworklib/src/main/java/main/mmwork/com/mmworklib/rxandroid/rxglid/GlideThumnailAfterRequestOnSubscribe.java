@@ -1,5 +1,7 @@
 package main.mmwork.com.mmworklib.rxandroid.rxglid;
 
+import android.widget.ImageView;
+
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.request.RequestListener;
@@ -14,10 +16,15 @@ import rx.android.MainThreadSubscription;
  */
 public class GlideThumnailAfterRequestOnSubscribe implements Observable.OnSubscribe<GlideBitmapDrawable> {
 
-    final DrawableTypeRequest<?> typeRequest;
+    final DrawableTypeRequest<?> imageRequest;
+    final DrawableTypeRequest<?> thumbnailRequest;
 
-    GlideThumnailAfterRequestOnSubscribe(DrawableTypeRequest<?> typeRequest) {
-        this.typeRequest = typeRequest;
+    final ImageView mImageView;
+
+    GlideThumnailAfterRequestOnSubscribe(DrawableTypeRequest<?> request, DrawableTypeRequest<?> typeRequest, ImageView imageView) {
+        this.imageRequest = request;
+        this.thumbnailRequest = typeRequest;
+        this.mImageView = imageView;
     }
 
     @Override
@@ -28,20 +35,34 @@ public class GlideThumnailAfterRequestOnSubscribe implements Observable.OnSubscr
             public boolean onException(Exception e, Object model, Target<GlideBitmapDrawable> target, boolean isFirstResource) {
                 if (!subscriber.isUnsubscribed()) {
                     subscriber.onError(e);
+                    if (null != mImageView) {
+                        return false;
+                    }
                 }
-                return false;
+                return true;
             }
 
             @Override
             public boolean onResourceReady(GlideBitmapDrawable resource, Object model, Target<GlideBitmapDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                 if (!subscriber.isUnsubscribed()) {
                     subscriber.onNext(resource);
+                    if (null != mImageView) {
+                        return false;
+                    }
                 }
-                return false;
+                return true;
             }
         };
 
-        typeRequest.listener(requestListener);
+        thumbnailRequest.listener(requestListener);
+        imageRequest
+                .thumbnail(thumbnailRequest);
+
+        if (null != mImageView) {
+            imageRequest.into(mImageView);
+        } else {
+            imageRequest.preload();
+        }
 
         subscriber.add(new MainThreadSubscription() {
             @Override

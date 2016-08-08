@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.util.Map;
 
+import main.mmwork.com.mmworklib.utils.DeviceInfo;
 import okhttp3.Call;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -45,11 +46,11 @@ public class OkHttpStreamFetcher implements DataFetcher<InputStream> {
         try {
             response = call.execute();
         } catch (UnknownHostException e) {
-            throw new UnknownHostException(e + "/" + url.toStringUrl());
+            throw new UnknownHostException(e + "/" + url.toStringUrl() + "/" + DeviceInfo.getUuid());
         }
         responseBody = response.body();
         if (!response.isSuccessful()) {
-            throw new IOException("Request failed with  url:" + url.toStringUrl()+",code:" + response.code());
+            throw new IOException("Request failed with  url:" + url.toStringUrl() + ",code:" + response.code());
         }
 
         long contentLength = responseBody.contentLength();
