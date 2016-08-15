@@ -1,5 +1,8 @@
 package main.mmwork.com.mmworklib.rxandroid.rxglid;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
 import com.bumptech.glide.DrawableTypeRequest;
@@ -16,15 +19,20 @@ import rx.android.MainThreadSubscription;
  */
 public class GlideThumnailAfterRequestOnSubscribe implements Observable.OnSubscribe<GlideBitmapDrawable> {
 
+    final Context mContext;
+
     final DrawableTypeRequest<?> imageRequest;
     final DrawableTypeRequest<?> thumbnailRequest;
+    final int errorId;
 
     final ImageView mImageView;
 
-    GlideThumnailAfterRequestOnSubscribe(DrawableTypeRequest<?> request, DrawableTypeRequest<?> typeRequest, ImageView imageView) {
+    GlideThumnailAfterRequestOnSubscribe(Context context, DrawableTypeRequest<?> request, DrawableTypeRequest<?> typeRequest, ImageView imageView, int errorId) {
+        this.mContext = context;
         this.imageRequest = request;
         this.thumbnailRequest = typeRequest;
         this.mImageView = imageView;
+        this.errorId = errorId;
     }
 
     @Override
@@ -34,8 +42,17 @@ public class GlideThumnailAfterRequestOnSubscribe implements Observable.OnSubscr
             @Override
             public boolean onException(Exception e, Object model, Target<GlideBitmapDrawable> target, boolean isFirstResource) {
                 if (!subscriber.isUnsubscribed()) {
-                    subscriber.onError(e);
+                    GlideBitmapDrawable glideBitmapDrawable = null;
+                    if (0 != errorId) {
+                        Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), errorId);
+                        glideBitmapDrawable = new GlideBitmapDrawable(mContext.getResources(), bitmap);
+                        subscriber.onNext(glideBitmapDrawable);
+                    }
+
                     if (null != mImageView) {
+//                        if (null != glideBitmapDrawable) {
+//                            mView.setImageBitmap(glideBitmapDrawable.getBitmap());
+//                        }
                         return false;
                     }
                 }
