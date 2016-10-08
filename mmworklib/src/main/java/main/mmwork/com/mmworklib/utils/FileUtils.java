@@ -5,13 +5,19 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.common.io.Files;
+
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 
 import rx.Observable;
@@ -239,4 +245,79 @@ public class FileUtils {
         return dir;
     }
 
+    /**
+     * 复制多级文件夹
+     *
+     * @param srcDir  要复制的文件目录，必须存在
+     * @param destDir 复制到那个目录下，可以不存在
+     */
+    public static void copyFolder(String srcDir, String destDir) {
+        try {
+            File dir = new File(srcDir);
+            if (!dir.exists()) {
+                System.out.println("原目录" + dir.getAbsolutePath() + "不存在！");
+                return;
+            }
+            if (!dir.isDirectory()) {// 不是目录则返回
+                System.out.println(dir.getAbsolutePath() + "不是目录！");
+                return;
+            }
+            destDir += File.separator + dir.getName(); // 根据源目录构造目标目录
+            File destFile = new File(destDir);
+            if (!destFile.exists()) // 若目标目录不存在则创建之
+                destFile.mkdirs();
+            File[] listFiles = dir.listFiles();
+            if (listFiles == null) return;
+            for (File file : listFiles) { // 遍历原文件夹
+                if (file.exists()) {
+                    if (file.isDirectory()) { // 若是目录，继续遍历
+                        copyFolder(file.getAbsolutePath(), destDir);
+                    } else { // 复制文件到目的目录
+                        CopyFile(file.getAbsolutePath(), destDir + File.separator
+                                + file.getName());
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 复制文件
+     *
+     * @param srcDir  文件的源目录
+     * @param destDir 文件的目标目录
+     */
+    private static void CopyFile(String srcDir, String destDir) throws IOException {
+        BufferedReader bufferedReader = null;
+        BufferedWriter bufferedWriter = null;
+
+        File srcFile = new File(srcDir);
+        File destFile = new File(destDir);
+        try {
+            bufferedReader = Files.newReader(srcFile, Charset.defaultCharset());
+            bufferedWriter = Files.newWriter(destFile, Charset.defaultCharset());
+            bufferedWriter.write(bufferedReader.read());
+
+            String content;
+            do {
+                content = bufferedReader.readLine();
+                if (null != content) {
+                    bufferedWriter.write(content);
+                }
+            } while (null != content);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (null != bufferedReader) {
+                bufferedReader.close();
+            }
+            if (null != bufferedWriter) {
+                bufferedWriter.close();
+            }
+        }
+    }
 }

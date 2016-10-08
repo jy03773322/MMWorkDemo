@@ -20,7 +20,7 @@ public class RxGlide {
     }
 
     public static Observable<GlideBitmapDrawable> afterGlideRequestListener(Context context, DrawableTypeRequest<?> request, int errorId) {
-        return afterGlideRequestListener(context, request, errorId);
+        return afterGlideRequestListener(context, request, null, errorId);
     }
 
     public static Observable<GlideBitmapDrawable> afterGlideRequestListener(Context context, DrawableTypeRequest<?> request, ImageView imageView) {

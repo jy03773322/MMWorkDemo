@@ -2,9 +2,6 @@ apply plugin: 'java'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
-
 // 根节点添加
 version = "0.3.7"
 def siteUrl = 'https://github.com/jy03773322/MM WorkDemo'    // project homepage

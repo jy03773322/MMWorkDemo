@@ -339,18 +339,11 @@ public class ImageWorker {
     }
 
     public static DrawableTypeRequest<String> buildFitCenterImageRequest(final Context context, String url) {
-        return buildFitCenterImageRequest(context, url, 0);
-    }
-
-    public static DrawableTypeRequest<String> buildFitCenterImageRequest(final Context context, String url, int errorId) {
         if (!TextUtils.isEmpty(url)) {
             DrawableTypeRequest<String> stringDrawableTypeRequest = Glide.with(context).load(url);
             stringDrawableTypeRequest
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .fitCenter();
-            if (0 != errorId) {
-                stringDrawableTypeRequest.error(errorId);
-            }
             return stringDrawableTypeRequest;
         }
         return null;
@@ -375,24 +368,10 @@ public class ImageWorker {
      * @return
      */
     public static DrawableTypeRequest<String> buildThumnaiRequest(final Context context, String thumnailUrl) {
-        return buildThumnaiRequest(context, thumnailUrl, 0);
-    }
-
-    /**
-     * 生成缩略图请求
-     *
-     * @param context
-     * @param thumnailUrl
-     * @return
-     */
-    public static DrawableTypeRequest<String> buildThumnaiRequest(final Context context, String thumnailUrl, int errorID) {
         try {
             if (!TextUtils.isEmpty(thumnailUrl)) {
                 DrawableTypeRequest<String> load = Glide.with(context).load(thumnailUrl);
                 load.diskCacheStrategy(DiskCacheStrategy.ALL);
-                if (0 != errorID) {
-                    load.error(errorID);
-                }
                 return load;
             }
         } catch (Exception e) {
