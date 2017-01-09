@@ -7,12 +7,10 @@ import android.util.Log;
 
 import com.google.common.io.Files;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -58,7 +56,11 @@ public class FileUtils {
                 .doOnNext(new Action1<String>() {
                     @Override
                     public void call(String s) {
-                        saveFile(content, path, name);
+                        try {
+                            saveFile(content, path, name);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 })
                 .map(new Func1<String, String>() {
@@ -72,39 +74,38 @@ public class FileUtils {
     /**
      * 将String数据存为文件
      */
-    public static boolean saveFile(String content, String path, String name) {
+    public static boolean saveFile(String content, String path, String name) throws IOException {
         boolean isSuccess = false;
         byte[] b = content.getBytes();
         BufferedOutputStream stream = null;
+        FileOutputStream fstream = null;
         File file = null;
         try {
             file = new File(path, name);
-            FileOutputStream fstream = new FileOutputStream(file);
+            fstream = new FileOutputStream(file);
             stream = new BufferedOutputStream(fstream);
             stream.write(b);
+            fstream.close();
             isSuccess = true;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
+            fstream.close();
+            stream.close();
         }
         return isSuccess;
     }
 
 
     //根据名字读取文件
-    public static String readFile(String fileName) {
+    public static String readFile(String fileName) throws IOException {
         File file = new File(Environment.getExternalStorageDirectory(), fileName);
         if (file.exists()) {
             BufferedReader bf = null;
+            FileReader fileReader = null;
             try {
-                bf = new BufferedReader(new FileReader(file));
+                fileReader = new FileReader(file);
+                bf = new BufferedReader(fileReader);
                 String content = "";
                 StringBuilder sb = new StringBuilder();
                 while (content != null) {
@@ -114,10 +115,12 @@ public class FileUtils {
                     }
                     sb.append(content.trim());
                 }
-                bf.close();
                 return sb.toString();
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                bf.close();
+                fileReader.close();
             }
         }
         return null;
