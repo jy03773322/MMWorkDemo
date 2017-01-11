@@ -83,6 +83,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+
     public void clearDb() {
         try {
             Map<Class<?>, TableInfo> mMap = DataBaseCommon.mMap;
