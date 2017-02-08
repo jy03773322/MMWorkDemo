@@ -21,7 +21,6 @@ android {
     productFlavors {
     }
 
-
 //    dataBinding {
 //        enabled = true
 //    }
