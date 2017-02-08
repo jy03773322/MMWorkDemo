@@ -8,7 +8,7 @@ import main.mmwork.com.mmworklib.db.entity.NetWorkRsultEntity;
 
 
 /**
- * Created by diaosi on 2015/12/7.
+ * Created by zhai on 2015/12/7.
  */
 public class DataBaseCommon {
 
